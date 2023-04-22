@@ -1,8 +1,8 @@
 package com.vox.post.model;
 
-public class Category {
+interface Category {
 
-    protected enum CategoryEnum {
+    enum CategoryEnum {
         politics, policy, culture, science, technology, climate, health, money, life
     }
 
