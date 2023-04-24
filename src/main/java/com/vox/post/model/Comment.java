@@ -3,9 +3,9 @@ package com.vox.post.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mongodb.lang.NonNull;
 import jakarta.persistence.Id;
-import jakarta.persistence.UniqueConstraint;
 
 import java.util.Date;
+import java.util.List;
 
 public class Comment {
     @Id
@@ -16,6 +16,9 @@ public class Comment {
 
     @NonNull
     private String content;
+
+
+    private List<Comment> replies;
 
     @JsonFormat(pattern = "yyyy-MM-dd@HH:mm")
     private Date publishedAt = new Date();

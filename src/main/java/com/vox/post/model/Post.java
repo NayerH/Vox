@@ -35,8 +35,8 @@ public class Post {
     @NonNull
     private Category.CategoryEnum category;
 
-    private List<MediaFile> mediaFiles;
-    @DBRef
+    private List<Long> mediaFiles;
+
     private List<Comment> comments;
 
 }
