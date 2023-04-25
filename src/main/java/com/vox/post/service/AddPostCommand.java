@@ -8,8 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AddPostCommand implements ReturnOneCommand {
-    @Autowired
+
     PostRepository postRepository;
+    @Autowired
+    public AddPostCommand(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     @Override
     public Post execute(Object o) {
