@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostRepository extends MongoRepository<Post, MongoId> {
+public interface PostRepository extends MongoRepository<Post, String> {
 
 
     List<Post> findPostsByCategory(Category.CategoryEnum category);

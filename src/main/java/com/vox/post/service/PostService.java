@@ -22,41 +22,42 @@ public class PostService {
     private ReturnOneCommand deletePostCommand;
     private AuthenticationCommand checkIfAuthorCommand;
     private ReturnIdCommand getUserIdFromSession;
-    private ReturnManyCommand getTopPostsInCategoryCommand;
+    private final ReturnManyCommand getTopPostsInCategoryCommand;
 
     @Autowired
-    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, AuthenticationCommand checkIfAuthorCommand, ReturnIdCommand getUserIdFromSession) {
+    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, AuthenticationCommand checkIfAuthorCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand) {
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
         this.getPostCommand = getPostCommand;
         this.deletePostCommand = deletePostCommand;
         this.checkIfAuthorCommand = checkIfAuthorCommand;
         this.getUserIdFromSession = getUserIdFromSession;
+        this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
     }
 
     //Functionalities
     public List<Post> getPosts(){
         return getAllPostsCommand.execute(null);
     }
-    public Post getPost(MongoId id){
+    public Post getPost(String id){
         return getPostCommand.execute(id);
     }
-    public Post deletePost(String sessionId, MongoId postId){
-        MongoId userId = getUserIdFromSession.execute(sessionId);
-        if(!checkIfAuthorCommand.execute(userId)){
-            throw new IllegalStateException("Invalid session ID");
-        }
+    public Post deletePost(String sessionId, String postId){
+//        MongoId userId = getUserIdFromSession.execute(sessionId);
+//        if(!checkIfAuthorCommand.execute(userId)){
+//            throw new IllegalStateException("Invalid session ID");
+//        }
         return deletePostCommand.execute(postId);
     }
     public Post addPost(String sessionId, Post post){
-        MongoId userId = getUserIdFromSession.execute(sessionId);
-        if(!checkIfAuthorCommand.execute(userId)){
-            throw new IllegalStateException("Invalid session ID");
-        }
+//        MongoId userId = getUserIdFromSession.execute(sessionId);
+//        if(!checkIfAuthorCommand.execute(userId)){
+//            throw new IllegalStateException("Invalid session ID");
+//        }
         return addPostCommand.execute(post);
     }
 
-    public Post updatePost(String id, MongoId id1, Post post) {
+    public Post updatePost(String id, String id1, Post post) {
         return null;
     }
 
@@ -65,20 +66,20 @@ public class PostService {
     }
 
     //Setters
-    public void setGetTopPostsInCategoryCommand(){
-        Class c;
-        try{
-            c = Class.forName("com.vox.post.service.GetTopPostsInCategoryCommand");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        try{
-            getTopPostsInCategoryCommand = (ReturnManyCommand) c.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void setGetTopPostsInCategoryCommand(){
+//        Class c;
+//        try{
+//            c = Class.forName("com.vox.post.service.GetTopPostsInCategoryCommand");
+//        } catch (ClassNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        try{
+//            getTopPostsInCategoryCommand = (ReturnManyCommand) c.newInstance();
+//        } catch (InstantiationException | IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 //    public void setGetAllPostsCommand(){
 //        Class c;

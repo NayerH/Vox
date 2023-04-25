@@ -19,7 +19,7 @@ public class RedisConfig implements CachingConfigurer {
     @Value(value = "${spring.redis.port}")
     private String redisPort;
 
-    @Value(value = "${spring.redis.timeout}")
+    @Value(value = "${redis.timeout}")
     private String redisTimeout;
 
     @Bean

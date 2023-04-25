@@ -18,7 +18,7 @@ public class GetPostCommand implements ReturnOneCommand {
     }
     @Override
     public Post execute(Object o) {
-        MongoId m = (MongoId) o;
+        String m = (String) o;
         Optional<Post> optionalPost = postRepository.findById(m);
         if(optionalPost.isPresent()){
             return optionalPost.get();
