@@ -5,7 +5,6 @@ import com.mongodb.lang.NonNull;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -29,7 +28,7 @@ public class Post implements Serializable {
     private String content;
 
     @NonNull
-    private Long authorId;
+    private String authorId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd@HH:mm")
@@ -43,18 +42,6 @@ public class Post implements Serializable {
     private List<Long> mediaFiles;
 
     private List<Comment> comments;
-
-//    public Post() {
-//    }
-//
-//    public Post(Long views, @NonNull String title, @NonNull String content, @NonNull Long authorId, @NonNull Category.CategoryEnum category) {
-//        this.views = views;
-//        this.title = title;
-//        this.content = content;
-//        this.authorId = authorId;
-//        this.category = category;
-//    }
-
 
     public ObjectId getId() {
         return id;
@@ -91,11 +78,11 @@ public class Post implements Serializable {
     }
 
     @NonNull
-    public Long getAuthorId() {
+    public String getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(@NonNull Long authorId) {
+    public void setAuthorId(@NonNull String authorId) {
         this.authorId = authorId;
     }
 

@@ -49,9 +49,25 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    @CachePut(value = "posts", key = "#post.id") //Cache recently updated posts
-    public Post updatePost(HttpSession session, @PathVariable MongoId id, @Validated @RequestBody Post post) {
-        return postService.updatePost(session.getId(), id, post);
+    @CachePut(value = "posts", key = "#{id}") //Cache recently updated posts
+    public Post updatePost(
+            HttpSession session,
+            @PathVariable MongoId id,
+            @RequestBody(required = false) String title,
+            @RequestBody(required = false) String content,
+            @RequestBody(required = false) List<String> tags,
+            @RequestBody(required = false) Category.CategoryEnum category,
+            @RequestBody(required = false) List<Long> mediaFiles
+    ) {
+        return postService.updatePost(
+                session.getId(),
+                id,
+                title,
+                content,
+                tags,
+                category,
+                mediaFiles
+        );
     }
 
     @GetMapping("/{category}")

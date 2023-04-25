@@ -2,17 +2,13 @@ package com.vox.post.service;
 
 import com.vox.post.model.Category;
 import com.vox.post.model.Post;
-import com.vox.post.service.interfaces.AuthenticationCommand;
-import com.vox.post.service.interfaces.ReturnIdCommand;
-import com.vox.post.service.interfaces.ReturnManyCommand;
-import com.vox.post.service.interfaces.ReturnOneCommand;
+import com.vox.post.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@SuppressWarnings({"rawtypes", "deprecation"})
 @Service
 public class PostService {
     //Commands
@@ -20,18 +16,23 @@ public class PostService {
     private ReturnOneCommand addPostCommand;
     private ReturnOneCommand getPostCommand;
     private ReturnOneCommand deletePostCommand;
-    private AuthenticationCommand checkIfAuthorCommand;
+    private CheckAuthorCommand checkIfAuthorizedCommand;
     private ReturnIdCommand getUserIdFromSession;
     private ReturnManyCommand getTopPostsInCategoryCommand;
+    private UpdateCommand updatePostCommand;
+
+
 
     @Autowired
-    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, AuthenticationCommand checkIfAuthorCommand, ReturnIdCommand getUserIdFromSession) {
+    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, CheckAuthorCommand checkIfAuthorizedCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, UpdateCommand updatePostCommand) {
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
         this.getPostCommand = getPostCommand;
         this.deletePostCommand = deletePostCommand;
-        this.checkIfAuthorCommand = checkIfAuthorCommand;
+        this.checkIfAuthorizedCommand = checkIfAuthorizedCommand;
         this.getUserIdFromSession = getUserIdFromSession;
+        this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
+        this.updatePostCommand = updatePostCommand;
     }
 
     //Functionalities
@@ -43,21 +44,33 @@ public class PostService {
     }
     public Post deletePost(String sessionId, MongoId postId){
         MongoId userId = getUserIdFromSession.execute(sessionId);
-        if(!checkIfAuthorCommand.execute(userId)){
-            throw new IllegalStateException("Invalid session ID");
+        if(!checkIfAuthorizedCommand.execute(userId, postId)){
+            throw new IllegalStateException("Only author is authorized to delete the post");
         }
         return deletePostCommand.execute(postId);
     }
     public Post addPost(String sessionId, Post post){
         MongoId userId = getUserIdFromSession.execute(sessionId);
-        if(!checkIfAuthorCommand.execute(userId)){
-            throw new IllegalStateException("Invalid session ID");
-        }
+//        if(!checkIfAuthorCommand.execute(userId)){
+//            throw new IllegalStateException("Invalid session ID");
+//        }
         return addPostCommand.execute(post);
     }
 
-    public Post updatePost(String id, MongoId id1, Post post) {
-        return null;
+    public Post updatePost(
+            String sessionId,
+            MongoId postId,
+            String title,
+            String content,
+            List<String> tags,
+            Category.CategoryEnum category,
+            List<Long> mediaFiles
+    ) {
+        MongoId userId = getUserIdFromSession.execute(sessionId);
+        if(!checkIfAuthorizedCommand.execute(userId, postId)){
+            throw new IllegalStateException("Only author is authorized to update the post");
+        }
+        return updatePostCommand.execute(postId, title, content, tags, category, mediaFiles);
     }
 
     public List<Post> getTopPostsInCategory(Category.CategoryEnum categoryEnum){
@@ -82,8 +95,8 @@ public class PostService {
         this.deletePostCommand = deletePostCommand;
     }
     @Autowired
-    public void setCheckIfAuthorCommand(AuthenticationCommand checkIfAuthorCommand) {
-        this.checkIfAuthorCommand = checkIfAuthorCommand;
+    public void setCheckIfAuthorizedCommand(CheckAuthorCommand checkIfAuthorizedCommand) {
+        this.checkIfAuthorizedCommand = checkIfAuthorizedCommand;
     }
     @Autowired
     public void setGetUserIdFromSession(ReturnIdCommand getUserIdFromSession) {
@@ -93,4 +106,9 @@ public class PostService {
     public void setGetTopPostsInCategoryCommand(ReturnManyCommand getTopPostsInCategoryCommand) {
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
     }
+    @Autowired
+    public void setUpdatePostCommand(UpdateCommand updatePostCommand) {
+        this.updatePostCommand = updatePostCommand;
+    }
+
 }
