@@ -7,7 +7,6 @@ import com.vox.post.service.interfaces.ReturnIdCommand;
 import com.vox.post.service.interfaces.ReturnManyCommand;
 import com.vox.post.service.interfaces.ReturnOneCommand;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,9 +22,10 @@ public class PostService {
     private AuthenticationCommand checkIfAuthorCommand;
     private ReturnIdCommand getUserIdFromSession;
     private final ReturnManyCommand getTopPostsInCategoryCommand;
+    private final ReturnManyCommand getTopPostsInCategoriesCommand;
 
     @Autowired
-    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, AuthenticationCommand checkIfAuthorCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand) {
+    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, AuthenticationCommand checkIfAuthorCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, ReturnManyCommand getTopPostsInCategoriesCommand) {
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
         this.getPostCommand = getPostCommand;
@@ -33,6 +33,7 @@ public class PostService {
         this.checkIfAuthorCommand = checkIfAuthorCommand;
         this.getUserIdFromSession = getUserIdFromSession;
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
+        this.getTopPostsInCategoriesCommand = getTopPostsInCategoriesCommand;
     }
 
     //Functionalities
@@ -63,6 +64,10 @@ public class PostService {
 
     public List<Post> getTopPostsInCategory(Category.CategoryEnum categoryEnum){
         return getTopPostsInCategoryCommand.execute(categoryEnum);
+    }
+
+    public List<Post> getTopPostsInCategories() {
+        return getTopPostsInCategoriesCommand.execute(3);
     }
 
     //Setters

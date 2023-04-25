@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,11 @@ public class PostController {
     @CachePut(value = "posts", key = "#category") //Cache top 3 posts in a category
     public List<Post> getTopPosts(@RequestParam("category") Category.CategoryEnum category) {
         return postService.getTopPostsInCategory(category);
+    }
+
+    @GetMapping("/categories/top")
+    public List<Post> getTopPostsPerCategories(){
+        return postService.getTopPostsInCategories();
     }
 
 }
