@@ -1,5 +1,6 @@
 package com.vox.post.service;
 
+import com.vox.post.model.Category;
 import com.vox.post.model.Post;
 import com.vox.post.service.interfaces.AuthenticationCommand;
 import com.vox.post.service.interfaces.ReturnIdCommand;
@@ -21,6 +22,7 @@ public class PostService {
     private ReturnOneCommand deletePostCommand;
     private AuthenticationCommand checkIfAuthorCommand;
     private ReturnIdCommand getUserIdFromSession;
+    private ReturnManyCommand getTopPostsInCategoryCommand;
 
     @Autowired
     public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, AuthenticationCommand checkIfAuthorCommand, ReturnIdCommand getUserIdFromSession) {
@@ -54,7 +56,30 @@ public class PostService {
         return addPostCommand.execute(post);
     }
 
+    public Post updatePost(String id, MongoId id1, Post post) {
+        return null;
+    }
+
+    public List<Post> getTopPostsInCategory(Category.CategoryEnum categoryEnum){
+        return getTopPostsInCategoryCommand.execute(categoryEnum);
+    }
+
     //Setters
+    public void setGetTopPostsInCategoryCommand(){
+        Class c;
+        try{
+            c = Class.forName("com.vox.post.service.GetTopPostsInCategoryCommand");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try{
+            getTopPostsInCategoryCommand = (ReturnManyCommand) c.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 //    public void setGetAllPostsCommand(){
 //        Class c;
 //        try {
