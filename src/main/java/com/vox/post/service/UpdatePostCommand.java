@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class updatePostCommand implements UpdateCommand {
+public class UpdatePostCommand implements UpdateCommand {
     private final PostRepository postRepository;
     @Autowired
-    public updatePostCommand(PostRepository postRepository) {
+    public UpdatePostCommand(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
 

@@ -10,8 +10,12 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends MongoRepository<Post, MongoId> {
-
-    List<Post> findPostsByCategory(Category.CategoryEnum category);
+    @Aggregation(pipeline = {
+            "{'$match' :  {'category' :  ?0}}",
+            "{'$skip': ?1}",
+            "{'$limit': 15}"
+    })
+    List<Post> findPostsByCategory(Category.CategoryEnum category, Integer skip);
 
     @Aggregation(pipeline = {
             "{'$match' :  {'category' :  ?0}}",

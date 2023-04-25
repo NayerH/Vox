@@ -70,10 +70,18 @@ public class PostController {
         );
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/{category}/top")
     @CachePut(value = "topPosts", key = "#category") //Cache top 3 posts in a category
     public List<Post> getTopPosts(@PathVariable Category.CategoryEnum category) {
         return postService.getTopPostsInCategory(category);
+    }
+
+    @GetMapping("/{category}")
+    public List<Post> getCategoryPosts(
+            @PathVariable Category.CategoryEnum category,
+            @RequestBody(required = false) Integer skip
+    ) {
+        return postService.getCategoryPosts(category, skip);
     }
 
 }

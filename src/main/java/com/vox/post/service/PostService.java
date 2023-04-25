@@ -20,11 +20,10 @@ public class PostService {
     private ReturnIdCommand getUserIdFromSession;
     private ReturnManyCommand getTopPostsInCategoryCommand;
     private UpdateCommand updatePostCommand;
-
-
+    private CategoryWithSkipCommand getCategoryPostsCommand;
 
     @Autowired
-    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, CheckAuthorCommand checkIfAuthorizedCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, UpdateCommand updatePostCommand) {
+    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, CheckAuthorCommand checkIfAuthorizedCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, UpdateCommand updatePostCommand, CategoryWithSkipCommand getCategoryPostsCommand) {
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
         this.getPostCommand = getPostCommand;
@@ -33,6 +32,7 @@ public class PostService {
         this.getUserIdFromSession = getUserIdFromSession;
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
         this.updatePostCommand = updatePostCommand;
+        this.getCategoryPostsCommand = getCategoryPostsCommand;
     }
 
     //Functionalities
@@ -77,6 +77,10 @@ public class PostService {
         return getTopPostsInCategoryCommand.execute(categoryEnum);
     }
 
+    public List<Post> getCategoryPosts(Category.CategoryEnum category, Integer skip) {
+        return getCategoryPostsCommand.execute(category, skip);
+    }
+
     //Setters
     @Autowired
     public void setGetAllPostsCommand(ReturnManyCommand getAllPostsCommand) {
@@ -110,5 +114,8 @@ public class PostService {
     public void setUpdatePostCommand(UpdateCommand updatePostCommand) {
         this.updatePostCommand = updatePostCommand;
     }
-
+    @Autowired
+    public void setGetCategoryPostsCommand(CategoryWithSkipCommand getCategoryPostsCommand) {
+        this.getCategoryPostsCommand = getCategoryPostsCommand;
+    }
 }
