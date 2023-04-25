@@ -10,9 +10,11 @@ import java.util.List;
 
 @Component
 public class GetAllPostsCommand implements ReturnManyCommand {
+    PostRepository postRepository;
     @Autowired
-    private PostRepository postRepository;
-
+    public GetAllPostsCommand(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
     @Override
     public List<Post> execute(Object o) {
         return postRepository.findAll();
