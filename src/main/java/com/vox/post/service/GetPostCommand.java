@@ -11,12 +11,8 @@ import java.util.Optional;
 
 @Component
 public class GetPostCommand implements ReturnOneCommand {
-
-    private PostRepository postRepository;
     @Autowired
-    public GetPostCommand(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private PostRepository postRepository;
 
     @Override
     public Post execute(Object o) {

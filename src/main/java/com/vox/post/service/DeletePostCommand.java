@@ -7,16 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class DeletePostCommand implements ReturnOneCommand {
-
-    private PostRepository postRepository;
     @Autowired
-    public DeletePostCommand(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private PostRepository postRepository;
 
     @Override
     public Post execute(Object o) {
@@ -25,7 +19,7 @@ public class DeletePostCommand implements ReturnOneCommand {
         if(!exists){
             throw new IllegalStateException("No post is available with id " + m + "to be deleted");
         }
-        postRepository.findById(m).get();
+        postRepository.deleteById(m);
         return null;
     }
 }

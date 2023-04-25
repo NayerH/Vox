@@ -2,6 +2,7 @@ package com.vox.post.controller;
 
 import com.vox.post.model.Post;
 import com.vox.post.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.validation.annotation.Validated;
@@ -30,13 +31,13 @@ public class PostController {
     }
 
     @PostMapping
-    public Post addPost(@Validated @RequestBody Post post) {
-        return postService.addPost(post);
+    public Post addPost(HttpSession session, @Validated @RequestBody Post post) {
+        return postService.addPost(session.getId(), post);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable MongoId id) {
-        postService.deletePost(id);
+    public void deletePost(HttpSession session, @PathVariable MongoId id) {
+        postService.deletePost(session.getId(), id);
     }
 
 }

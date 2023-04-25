@@ -1,6 +1,8 @@
 package com.vox.post.service;
 
 import com.vox.post.model.Post;
+import com.vox.post.service.interfaces.AuthenticationCommand;
+import com.vox.post.service.interfaces.ReturnIdCommand;
 import com.vox.post.service.interfaces.ReturnManyCommand;
 import com.vox.post.service.interfaces.ReturnOneCommand;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@SuppressWarnings({"rawtypes", "deprecation"})
 @Service
 public class PostService {
     //Commands
@@ -15,12 +18,16 @@ public class PostService {
     private ReturnOneCommand addPostCommand;
     private ReturnOneCommand getPostCommand;
     private ReturnOneCommand deletePostCommand;
+    private AuthenticationCommand checkIfAuthorCommand;
+    private ReturnIdCommand getUserIdFromSession;
 
     public PostService() {
         this.setGetAllPostsCommand();
         this.setAddPostCommand();
         this.setGetPostCommand();
         this.setDeletePostCommand();
+        this.setCheckIfAuthorCommand();
+        this.setGetUserIdFromSession();
     }
 
     //Functionalities
@@ -30,10 +37,18 @@ public class PostService {
     public Post getPost(MongoId id){
         return getPostCommand.execute(id);
     }
-    public Post deletePost(MongoId id){
-        return deletePostCommand.execute(id);
+    public Post deletePost(String sessionId, MongoId postId){
+        MongoId userId = getUserIdFromSession.execute(sessionId);
+        if(!checkIfAuthorCommand.execute(userId)){
+            throw new IllegalStateException("Invalid session ID");
+        }
+        return deletePostCommand.execute(postId);
     }
-    public Post addPost(Post post){
+    public Post addPost(String sessionId, Post post){
+        MongoId userId = getUserIdFromSession.execute(sessionId);
+        if(!checkIfAuthorCommand.execute(userId)){
+            throw new IllegalStateException("Invalid session ID");
+        }
         return addPostCommand.execute(post);
     }
 
@@ -48,9 +63,7 @@ public class PostService {
 
         try {
             getAllPostsCommand = (ReturnManyCommand) c.newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -64,9 +77,7 @@ public class PostService {
 
         try {
             getPostCommand = (ReturnOneCommand) c.newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -80,9 +91,7 @@ public class PostService {
 
         try {
             deletePostCommand = (ReturnOneCommand) c.newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -96,9 +105,35 @@ public class PostService {
 
         try {
             addPostCommand = (ReturnOneCommand) c.newInstance();
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        }
+    }
+    public void setCheckIfAuthorCommand() {
+        Class c;
+        try {
+            c = Class.forName("com.vox.post.service.CheckIfAuthorCommand");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            checkIfAuthorCommand = (AuthenticationCommand) c.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void setGetUserIdFromSession() {
+        Class c;
+        try {
+            c = Class.forName("com.vox.post.service.GetUserIdFromSession");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            getUserIdFromSession = (ReturnIdCommand) c.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
