@@ -14,9 +14,14 @@ import java.util.List;
 @RequestMapping(path = "api/v1/posts")
 public class PostController {
 
-    private final PostService postService;
+    private PostService postService;
+
     @Autowired
     public PostController(PostService postService) {
+        this.postService = postService;
+    }
+    @Autowired
+    public void setPostService(PostService postService) {
         this.postService = postService;
     }
 
@@ -39,5 +44,4 @@ public class PostController {
     public void deletePost(HttpSession session, @PathVariable MongoId id) {
         postService.deletePost(session.getId(), id);
     }
-
 }
