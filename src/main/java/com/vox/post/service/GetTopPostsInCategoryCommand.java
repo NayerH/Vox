@@ -12,8 +12,12 @@ import java.util.Optional;
 
 @Component
 public class GetTopPostsInCategoryCommand implements ReturnManyCommand {
-    @Autowired
+
     private PostRepository postRepository;
+    @Autowired
+    public GetTopPostsInCategoryCommand(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     @Override
     public List<Post> execute(Object o){

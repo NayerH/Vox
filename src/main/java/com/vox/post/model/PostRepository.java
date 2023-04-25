@@ -10,7 +10,6 @@ import java.util.List;
 @Repository
 public interface PostRepository extends MongoRepository<Post, MongoId> {
 
-
     List<Post> findPostsByCategory(Category.CategoryEnum category);
 
     @Aggregation(pipeline = {
