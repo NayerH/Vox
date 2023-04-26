@@ -1,6 +1,7 @@
 package com.vox.post.controller;
 
 import com.vox.post.model.Category;
+import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
 import com.vox.post.service.CacheService;
 import com.vox.post.service.PostService;
@@ -59,6 +60,7 @@ public class PostController {
         return postService.addPost(session.getId(), post);
     }
 
+
     @DeleteMapping("/delete/{id}")
     @CacheEvict(value = "posts", key = "#id") //Evict cached posts by id
     public void deletePost(HttpSession session, @PathVariable String id) {
@@ -108,4 +110,13 @@ public class PostController {
         return postService.getCategoryPosts(category, skip);
     }
 
+    @PutMapping(path = "/{postId}")
+    public void addComment(HttpSession session, @PathVariable("postId") String postId, @RequestBody Comment comment) {
+        postService.addComment(session.getId(), postId, comment);
+    }
+
+    @PutMapping(path = "/{postId}/{commentId}")
+    public void addReply(HttpSession session, @PathVariable("postId") String postId, @PathVariable("commentId") String commentId, @RequestBody Comment reply) {
+        postService.addReply(session.getId(), postId, commentId, reply);
+    }
 }

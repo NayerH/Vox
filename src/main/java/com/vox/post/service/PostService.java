@@ -1,6 +1,7 @@
 package com.vox.post.service;
 
 import com.vox.post.model.Category;
+import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
 import com.vox.post.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,22 @@ public class PostService {
     private ReturnManyCommand getTopPostsInCategoriesCommand;
     private UpdateCommand updatePostCommand;
     private CategoryWithSkipCommand getCategoryPostsCommand;
+    private AddCommentCommand addComment;
+    private AddReplyCommand addReply;
 
     @Autowired
-    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, CheckAuthorCommand checkIfAuthorizedCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, UpdateCommand updatePostCommand, CategoryWithSkipCommand getCategoryPostsCommand, ReturnManyCommand getTopPostsInCategoriesCommand){
+    public PostService(ReturnManyCommand getAllPostsCommand,
+                       ReturnOneCommand addPostCommand,
+                       ReturnOneCommand getPostCommand,
+                       ReturnOneCommand deletePostCommand,
+                       CheckAuthorCommand checkIfAuthorizedCommand,
+                       ReturnIdCommand getUserIdFromSession,
+                       ReturnManyCommand getTopPostsInCategoryCommand,
+                       UpdateCommand updatePostCommand,
+                       CategoryWithSkipCommand getCategoryPostsCommand,
+                       AddCommentCommand addComment,
+                       AddReplyCommand addReply) {
+
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
         this.getPostCommand = getPostCommand;
@@ -33,7 +47,9 @@ public class PostService {
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
         this.updatePostCommand = updatePostCommand;
         this.getCategoryPostsCommand = getCategoryPostsCommand;
-        this.getTopPostsInCategoriesCommand = getTopPostsInCategoriesCommand;
+        this.addComment = addComment;
+        this.addReply = addReply;
+
     }
 
     //Functionalities
@@ -45,6 +61,7 @@ public class PostService {
     public Post getPost(String id){
         return getPostCommand.execute(id);
     }
+
     public Post deletePost(String sessionId, String postId){
 //        TODO: Uncomment this when authentication is implemented
 //        MongoId userId = getUserIdFromSession.execute(sessionId);
@@ -90,6 +107,18 @@ public class PostService {
 
     public List<Post> getCategoryPosts(Category.CategoryEnum category, Integer skip) {
         return getCategoryPostsCommand.execute(category, skip);
+    }
+
+    public void addComment(String sessionId, String postId, Comment comment) {
+        String userId = getUserIdFromSession.execute(sessionId);
+        if (comment != null && comment.getContent().length() > 0)
+            addComment.execute(userId,postId,comment);
+    }
+
+    public void addReply(String sessionId, String postId, String commentId, Comment reply) {
+//        String userId = getUserIdFromSession.execute(sessionId);
+        if (reply != null && reply.getContent().length() > 0)
+            addReply.execute("userId",postId,commentId,reply);
     }
 
     //Setters
