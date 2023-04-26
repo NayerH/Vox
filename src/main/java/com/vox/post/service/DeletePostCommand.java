@@ -16,7 +16,7 @@ public class DeletePostCommand implements ReturnOneCommand {
     }
     @Override
     public Post execute(Object o) {
-        MongoId m = (MongoId) o;
+        String m = (String) o;
         boolean exists = postRepository.existsById(m);
         if(!exists){
             throw new IllegalStateException("No post is available with id " + m + "to be deleted");

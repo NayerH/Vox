@@ -4,7 +4,6 @@ import com.vox.post.model.Category;
 import com.vox.post.model.Post;
 import com.vox.post.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,11 +12,13 @@ import java.util.List;
 public class PostService {
     //Commands
     private ReturnManyCommand getAllPostsCommand;
-    private ReturnOneCommand addPostCommand;
+    private final ReturnOneCommand addPostCommand;
     private ReturnOneCommand getPostCommand;
     private ReturnOneCommand deletePostCommand;
     private CheckAuthorCommand checkIfAuthorizedCommand;
     private ReturnIdCommand getUserIdFromSession;
+    private final ReturnManyCommand getTopPostsInCategoryCommand;
+    private final ReturnManyCommand getTopPostsInCategoriesCommand;
     private ReturnManyCommand getTopPostsInCategoryCommand;
     private UpdateCommand updatePostCommand;
     private CategoryWithSkipCommand getCategoryPostsCommand;
@@ -31,26 +32,31 @@ public class PostService {
         this.checkIfAuthorizedCommand = checkIfAuthorizedCommand;
         this.getUserIdFromSession = getUserIdFromSession;
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
+        this.getTopPostsInCategoriesCommand = getTopPostsInCategoriesCommand;
         this.updatePostCommand = updatePostCommand;
         this.getCategoryPostsCommand = getCategoryPostsCommand;
     }
 
     //Functionalities
+//    Get all posts
     public List<Post> getPosts(){
         return getAllPostsCommand.execute(null);
     }
-    public Post getPost(MongoId id){
+//    Get post by id
+    public Post getPost(String id){
         return getPostCommand.execute(id);
     }
-    public Post deletePost(String sessionId, MongoId postId){
-        MongoId userId = getUserIdFromSession.execute(sessionId);
-        if(!checkIfAuthorizedCommand.execute(userId, postId)){
-            throw new IllegalStateException("Only author is authorized to delete the post");
-        }
+    public Post deletePost(String sessionId, String postId){
+//        TODO: Uncomment this when authentication is implemented
+//        MongoId userId = getUserIdFromSession.execute(sessionId);
+//        if(!checkIfAuthorCommand.execute(userId)){
+//            throw new IllegalStateException("Invalid session ID");
+//        }
         return deletePostCommand.execute(postId);
     }
     public Post addPost(String sessionId, Post post){
-        MongoId userId = getUserIdFromSession.execute(sessionId);
+//        TODO: Uncomment this when authentication is implemented
+//        MongoId userId = getUserIdFromSession.execute(sessionId);
 //        if(!checkIfAuthorCommand.execute(userId)){
 //            throw new IllegalStateException("Invalid session ID");
 //        }
@@ -73,8 +79,14 @@ public class PostService {
         return updatePostCommand.execute(postId, title, content, tags, category, mediaFiles);
     }
 
+//    Returns top posts in a category
     public List<Post> getTopPostsInCategory(Category.CategoryEnum categoryEnum){
         return getTopPostsInCategoryCommand.execute(categoryEnum);
+    }
+
+//    Return top posts in all categories
+    public List<Post> getTopPostsInCategories() {
+        return getTopPostsInCategoriesCommand.execute(null);
     }
 
     public List<Post> getCategoryPosts(Category.CategoryEnum category, Integer skip) {
