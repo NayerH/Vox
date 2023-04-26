@@ -2,6 +2,7 @@ package com.vox.post.repository;
 
 import com.vox.post.model.Category;
 import com.vox.post.model.Post;
+
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -27,6 +28,7 @@ public interface PostRepository extends MongoRepository<Post, String> {
     })
     List<Post> findTopPostInCategory(Category.CategoryEnum category, Integer limit);
 
+//    TODO: check last month only
     @Aggregation(pipeline = {
             "{'$sort':  {'views' : -1}}", //Sort by views in descending order
             "{'$group':  {'_id' : '$category', 'posts' : {'$push' : '$$ROOT'}}}", //Group by category and push all posts into an array,

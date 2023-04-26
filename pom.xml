@@ -80,6 +80,10 @@
 			<artifactId>mongo-java-driver</artifactId>
 			<version>3.12.10</version>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
 
 	</dependencies>
 

@@ -7,9 +7,12 @@ import jakarta.persistence.TemporalType;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +35,8 @@ public class Post implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd@HH:mm")
-    private Date publishedAt = new Date();
+    @Indexed
+    private LocalDate publishedAt = LocalDate.now();
 
     private List<String> tags;
 
@@ -42,6 +46,20 @@ public class Post implements Serializable {
     private List<Long> mediaFiles;
 
     private List<Comment> comments;
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    public void addReply(String commentId, Comment reply) {
+        for (Comment comment : this.comments) {
+            if (comment.getId().equals(commentId)){
+                comment.addReply(reply);
+                return;
+            }
+        }
+        throw new IllegalStateException("Comment with id: " + commentId + " not found");
+    }
 
     public ObjectId getId() {
         return id;
@@ -86,11 +104,11 @@ public class Post implements Serializable {
         this.authorId = authorId;
     }
 
-    public Date getPublishedAt() {
+    public LocalDate getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(Date publishedAt) {
+    public void setPublishedAt(LocalDate publishedAt) {
         this.publishedAt = publishedAt;
     }
 
@@ -126,6 +144,12 @@ public class Post implements Serializable {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
+
+//    public void addComment(Comment comment) {
+//        if (this.comments == null)
+//            this.comments = new ArrayList<Comment>();
+//        this.comments.add(comment);
+//    }
 
     @Override
     public String toString() {
