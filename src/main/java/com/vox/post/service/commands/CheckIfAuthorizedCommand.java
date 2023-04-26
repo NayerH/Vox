@@ -1,11 +1,11 @@
-package com.vox.post.service;
+package com.vox.post.service.commands;
 
 import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.CheckAuthorCommand;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class CheckIfAuthorizedCommand implements CheckAuthorCommand {
 
     private final PostRepository postRepository;

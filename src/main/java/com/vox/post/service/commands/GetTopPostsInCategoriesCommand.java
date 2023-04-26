@@ -1,4 +1,4 @@
-package com.vox.post.service;
+package com.vox.post.service.commands;
 
 import com.vox.post.model.Post;
 import com.vox.post.repository.PostRepository;

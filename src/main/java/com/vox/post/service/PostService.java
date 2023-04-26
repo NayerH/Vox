@@ -3,6 +3,7 @@ package com.vox.post.service;
 import com.vox.post.model.Category;
 import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
+import com.vox.post.service.commands.AddCommentCommand;
 import com.vox.post.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class PostService {
     private UpdateCommand updatePostCommand;
     private CategoryWithSkipCommand getCategoryPostsCommand;
     private AddCommentCommand addComment;
-    private AddReplyCommand addReply;
+    private IAddReplyCommand addReply;
 
     @Autowired
     public PostService(ReturnManyCommand getAllPostsCommand,
@@ -36,7 +37,7 @@ public class PostService {
                        UpdateCommand updatePostCommand,
                        CategoryWithSkipCommand getCategoryPostsCommand,
                        AddCommentCommand addComment,
-                       AddReplyCommand addReply) {
+                       IAddReplyCommand addReply) {
 
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;

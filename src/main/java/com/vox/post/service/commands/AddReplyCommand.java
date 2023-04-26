@@ -1,22 +1,20 @@
-package com.vox.post.service;
+package com.vox.post.service.commands;
 
 import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
-import com.vox.post.model.PostRepository;
-import com.vox.post.service.interfaces.AddReplyCommand;
+import com.vox.post.repository.PostRepository;
+import com.vox.post.service.interfaces.IAddReplyCommand;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 
-@Service
-public class AddReply implements AddReplyCommand {
+@Component
+public class AddReplyCommand implements IAddReplyCommand {
 
     private PostRepository postRepository;
     @Autowired
-    public AddReply(PostRepository postRepository) {
+    public AddReplyCommand(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
 
