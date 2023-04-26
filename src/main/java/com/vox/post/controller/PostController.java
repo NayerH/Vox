@@ -55,12 +55,6 @@ public class PostController {
         postService.deletePost(session.getId(), id);
     }
 
-//    TODO: Add Update Functionality
-    @PutMapping("/{id}")
-    @CachePut(value = "posts", key = "#post.id") //Cache recently updated posts
-    public Post updatePost(HttpSession session, @PathVariable String id, @Validated @RequestBody Post post) {
-        return postService.updatePost(session.getId(), id, post);
-    }
 
 //    Returns top 3 posts in a category and caches the result after each request
     @GetMapping("/categories")
@@ -73,6 +67,34 @@ public class PostController {
     @GetMapping("/categories/top")
     public List<Post> getTopPostsPerCategories(){
         return postService.getTopPostsInCategories();
+        
+    @CachePut(value = "posts", key = "#{id}") //Cache recently updated posts
+    public Post updatePost(
+            HttpSession session,
+            @PathVariable MongoId id,
+            @RequestBody(required = false) String title,
+            @RequestBody(required = false) String content,
+            @RequestBody(required = false) List<String> tags,
+            @RequestBody(required = false) Category.CategoryEnum category,
+            @RequestBody(required = false) List<Long> mediaFiles
+    ) {
+        return postService.updatePost(
+                session.getId(),
+                id,
+                title,
+                content,
+                tags,
+                category,
+                mediaFiles
+        );
+    }
+
+    @GetMapping("/{category}")
+    public List<Post> getCategoryPosts(
+            @PathVariable Category.CategoryEnum category,
+            @RequestBody(required = false) Integer skip
+    ) {
+        return postService.getCategoryPosts(category, skip);
     }
 
 }

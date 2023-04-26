@@ -69,6 +69,9 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-couchbase</artifactId>
 			<version>5.0.5</version>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.1.1</version>
 		</dependency>
 	</dependencies>
 

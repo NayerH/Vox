@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Component
 public class GetPostCommand implements ReturnOneCommand {
-    PostRepository postRepository;
+    private PostRepository postRepository;
     @Autowired
     public GetPostCommand(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -21,7 +21,10 @@ public class GetPostCommand implements ReturnOneCommand {
         String m = (String) o;
         Optional<Post> optionalPost = postRepository.findById(m);
         if(optionalPost.isPresent()){
-            return optionalPost.get();
+            Post p = optionalPost.get();
+            p.setViews(p.getViews() + 1);
+            this.postRepository.save(p);
+            return p;
         }
         throw new IllegalStateException("No post is available with id " + m);
     }

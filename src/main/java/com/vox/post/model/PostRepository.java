@@ -3,6 +3,7 @@ package com.vox.post.model;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,8 +12,12 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends MongoRepository<Post, String> {
 
-
-    List<Post> findPostsByCategory(Category.CategoryEnum category);
+    @Aggregation(pipeline = {
+            "{'$match' :  {'category' :  ?0}}",
+            "{'$skip': ?1}",
+            "{'$limit': 15}"
+    })
+    List<Post> findPostsByCategory(Category.CategoryEnum category, Integer skip);
 
     @Aggregation(pipeline = {
             "{'$match' :  {'category' :  ?0}}",
@@ -30,7 +35,7 @@ public interface PostRepository extends MongoRepository<Post, String> {
     })
     Optional<List<Post>> findTopPostsInEachCategory(Integer limit);
 
-//    @Query(value="{category:'?0'}", fields="{'name' : 1, 'quantity' : 1}")
-//    List<GroceryItem> findAll(String category);
+    @Query(value="{'id':'?0'}", fields="{'authorId' : 1}")
+    String findPostByIdAndReturnAuthor(MongoId postId);
 
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DeletePostCommand implements ReturnOneCommand {
-    PostRepository postRepository;
+    private PostRepository postRepository;
     @Autowired
     public DeletePostCommand(PostRepository postRepository) {
         this.postRepository = postRepository;
