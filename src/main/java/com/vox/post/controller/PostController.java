@@ -3,15 +3,19 @@ package com.vox.post.controller;
 import com.vox.post.model.Category;
 import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
+import com.vox.post.service.CacheService;
 import com.vox.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,6 +23,11 @@ import java.util.List;
 public class PostController {
 
     private PostService postService;
+
+    private LocalDate date = LocalDate.now().minus(1, java.time.temporal.ChronoUnit.MONTHS);
+
+    @Autowired
+    private CacheService cacheService;
 
     @Autowired
     public PostController(PostService postService) {
@@ -36,27 +45,27 @@ public class PostController {
         return postService.getPosts();
     }
 
-//    Return a post by id and cache it if it has more than 1000 views
-    @Cacheable(value = "posts", key = "#id", unless = "#result.views < 1000")
-    @GetMapping("/{id}")
-    public Post getPost(@PathVariable String id) {
+//    Return a post by id and cache it if it has more than n views and is not older than 1 month
+//    @Cacheable(value = "posts", key = "#id", unless = "{#result.views < ${spring.cache.views} && #result.publishedAt.before(cacheService.getCurrentDate())}")
+    @Cacheable(value="posts", keyGenerator = "postsByIdKeyGenerator")
+    @GetMapping("/get/{id}")
+    public Post getPost(@PathVariable("id") String id) {
         return postService.getPost(id);
     }
 
     @PostMapping
     @CachePut(value = "posts", key = "#post.id") //Cache newly added posts
     public Post addPost(HttpSession session, @Validated @RequestBody Post post) {
-//        TODO: Add Media Server
+//        TODO: Add Media Server [Hashing authorId + title + date]
         return postService.addPost(session.getId(), post);
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @CacheEvict(value = "posts", key = "#id") //Evict cached posts by id
     public void deletePost(HttpSession session, @PathVariable String id) {
         postService.deletePost(session.getId(), id);
     }
-
 
 //    Returns top 3 posts in a category and caches the result after each request
     @GetMapping("/categories")
