@@ -1,6 +1,7 @@
 package com.vox.post.service;
 
 import com.vox.post.model.Category;
+import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
 import com.vox.post.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,21 @@ public class PostService {
     private ReturnManyCommand getTopPostsInCategoryCommand;
     private UpdateCommand updatePostCommand;
     private CategoryWithSkipCommand getCategoryPostsCommand;
+    private AddCommentCommand addComment;
+    private AddReplyCommand addReply;
 
     @Autowired
-    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, CheckAuthorCommand checkIfAuthorizedCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, UpdateCommand updatePostCommand, CategoryWithSkipCommand getCategoryPostsCommand) {
+    public PostService(ReturnManyCommand getAllPostsCommand,
+                       ReturnOneCommand addPostCommand,
+                       ReturnOneCommand getPostCommand,
+                       ReturnOneCommand deletePostCommand,
+                       CheckAuthorCommand checkIfAuthorizedCommand,
+                       ReturnIdCommand getUserIdFromSession,
+                       ReturnManyCommand getTopPostsInCategoryCommand,
+                       UpdateCommand updatePostCommand,
+                       CategoryWithSkipCommand getCategoryPostsCommand,
+                       AddCommentCommand addComment,
+                       AddReplyCommand addReply) {
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
         this.getPostCommand = getPostCommand;
@@ -33,6 +46,8 @@ public class PostService {
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
         this.updatePostCommand = updatePostCommand;
         this.getCategoryPostsCommand = getCategoryPostsCommand;
+        this.addComment = addComment;
+        this.addReply = addReply;
     }
 
     //Functionalities
@@ -42,36 +57,36 @@ public class PostService {
     public Post getPost(MongoId id){
         return getPostCommand.execute(id);
     }
-    public Post deletePost(String sessionId, MongoId postId){
-        MongoId userId = getUserIdFromSession.execute(sessionId);
-        if(!checkIfAuthorizedCommand.execute(userId, postId)){
-            throw new IllegalStateException("Only author is authorized to delete the post");
-        }
-        return deletePostCommand.execute(postId);
-    }
+//    public Post deletePost(String sessionId, MongoId postId){
+//        String userId = getUserIdFromSession.execute(sessionId);
+//        if(!checkIfAuthorizedCommand.execute(userId, postId)){
+//            throw new IllegalStateException("Only author is authorized to delete the post");
+//        }
+//        return deletePostCommand.execute(postId);
+//    }
     public Post addPost(String sessionId, Post post){
-        MongoId userId = getUserIdFromSession.execute(sessionId);
+//        MongoId userId = getUserIdFromSession.execute(sessionId);
 //        if(!checkIfAuthorCommand.execute(userId)){
 //            throw new IllegalStateException("Invalid session ID");
 //        }
         return addPostCommand.execute(post);
     }
 
-    public Post updatePost(
-            String sessionId,
-            MongoId postId,
-            String title,
-            String content,
-            List<String> tags,
-            Category.CategoryEnum category,
-            List<Long> mediaFiles
-    ) {
-        MongoId userId = getUserIdFromSession.execute(sessionId);
-        if(!checkIfAuthorizedCommand.execute(userId, postId)){
-            throw new IllegalStateException("Only author is authorized to update the post");
-        }
-        return updatePostCommand.execute(postId, title, content, tags, category, mediaFiles);
-    }
+//    public Post updatePost(
+//            String sessionId,
+//            MongoId postId,
+//            String title,
+//            String content,
+//            List<String> tags,
+//            Category.CategoryEnum category,
+//            List<Long> mediaFiles
+//    ) {
+//        MongoId userId = getUserIdFromSession.execute(sessionId);
+//        if(!checkIfAuthorizedCommand.execute(userId, postId)){
+//            throw new IllegalStateException("Only author is authorized to update the post");
+//        }
+//        return updatePostCommand.execute(postId, title, content, tags, category, mediaFiles);
+//    }
 
     public List<Post> getTopPostsInCategory(Category.CategoryEnum categoryEnum){
         return getTopPostsInCategoryCommand.execute(categoryEnum);
@@ -79,6 +94,18 @@ public class PostService {
 
     public List<Post> getCategoryPosts(Category.CategoryEnum category, Integer skip) {
         return getCategoryPostsCommand.execute(category, skip);
+    }
+
+    public void addComment(String sessionId, String postId, Comment comment) {
+        String userId = getUserIdFromSession.execute(sessionId);
+        if (comment != null && comment.getContent().length() > 0)
+            addComment.execute(userId,postId,comment);
+    }
+
+    public void addReply(String sessionId, String postId, String commentId, Comment reply) {
+//        String userId = getUserIdFromSession.execute(sessionId);
+        if (reply != null && reply.getContent().length() > 0)
+            addReply.execute("userId",postId,commentId,reply);
     }
 
     //Setters

@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +43,20 @@ public class Post implements Serializable {
     private List<Long> mediaFiles;
 
     private List<Comment> comments;
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    public void addReply(String commentId, Comment reply) {
+        for (Comment comment : this.comments) {
+            if (comment.getId().equals(commentId)){
+                comment.addReply(reply);
+                return;
+            }
+        }
+        throw new IllegalStateException("Comment with id: " + commentId + " not found");
+    }
 
     public ObjectId getId() {
         return id;
@@ -126,6 +141,12 @@ public class Post implements Serializable {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
+
+//    public void addComment(Comment comment) {
+//        if (this.comments == null)
+//            this.comments = new ArrayList<Comment>();
+//        this.comments.add(comment);
+//    }
 
     @Override
     public String toString() {

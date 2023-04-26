@@ -1,6 +1,7 @@
 package com.vox.post.controller;
 
 import com.vox.post.model.Category;
+import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
 import com.vox.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
@@ -43,32 +44,32 @@ public class PostController {
         return postService.addPost(session.getId(), post);
     }
 
-    @DeleteMapping("/{id}")
-    public void deletePost(HttpSession session, @PathVariable MongoId id) {
-        postService.deletePost(session.getId(), id);
-    }
-
-    @PutMapping("/{id}")
-    @CachePut(value = "posts", key = "#{id}") //Cache recently updated posts
-    public Post updatePost(
-            HttpSession session,
-            @PathVariable MongoId id,
-            @RequestBody(required = false) String title,
-            @RequestBody(required = false) String content,
-            @RequestBody(required = false) List<String> tags,
-            @RequestBody(required = false) Category.CategoryEnum category,
-            @RequestBody(required = false) List<Long> mediaFiles
-    ) {
-        return postService.updatePost(
-                session.getId(),
-                id,
-                title,
-                content,
-                tags,
-                category,
-                mediaFiles
-        );
-    }
+//    @DeleteMapping("/{id}")
+//    public void deletePost(HttpSession session, @PathVariable MongoId id) {
+//        postService.deletePost(session.getId(), id);
+//    }
+//
+//    @PutMapping("/{id}")
+//    @CachePut(value = "posts", key = "#{id}") //Cache recently updated posts
+//    public Post updatePost(
+//            HttpSession session,
+//            @PathVariable MongoId id,
+//            @RequestBody(required = false) String title,
+//            @RequestBody(required = false) String content,
+//            @RequestBody(required = false) List<String> tags,
+//            @RequestBody(required = false) Category.CategoryEnum category,
+//            @RequestBody(required = false) List<Long> mediaFiles
+//    ) {
+//        return postService.updatePost(
+//                session.getId(),
+//                id,
+//                title,
+//                content,
+//                tags,
+//                category,
+//                mediaFiles
+//        );
+//    }
 
     @GetMapping("/{category}/top")
     @CachePut(value = "topPosts", key = "#category") //Cache top 3 posts in a category
@@ -84,4 +85,13 @@ public class PostController {
         return postService.getCategoryPosts(category, skip);
     }
 
+    @PutMapping(path = "/{postId}")
+    public void addComment(HttpSession session, @PathVariable("postId") String postId, @RequestBody Comment comment) {
+        postService.addComment(session.getId(), postId, comment);
+    }
+
+    @PutMapping(path = "/{postId}/{commentId}")
+    public void addReply(HttpSession session, @PathVariable("postId") String postId, @PathVariable("commentId") String commentId, @RequestBody Comment reply) {
+        postService.addReply(session.getId(), postId, commentId, reply);
+    }
 }

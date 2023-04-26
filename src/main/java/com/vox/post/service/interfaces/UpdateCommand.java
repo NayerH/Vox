@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.util.List;
 
 public interface UpdateCommand {
-    Post execute(MongoId postId,
+    Post execute(String postId,
                  String title,
                  String content,
                  List<String> tags,

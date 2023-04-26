@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostRepository extends MongoRepository<Post, MongoId> {
+public interface PostRepository extends MongoRepository<Post, String> {
     @Aggregation(pipeline = {
             "{'$match' :  {'category' :  ?0}}",
             "{'$skip': ?1}",

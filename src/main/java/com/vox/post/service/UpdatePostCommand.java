@@ -19,7 +19,7 @@ public class UpdatePostCommand implements UpdateCommand {
     }
 
     @Override
-    public Post execute(MongoId postId,
+    public Post execute(String postId,
                         String title,
                         String content,
                         List<String> tags,
