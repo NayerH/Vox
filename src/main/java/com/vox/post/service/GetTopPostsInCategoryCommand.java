@@ -13,7 +13,7 @@ import java.util.Optional;
 @Component
 public class GetTopPostsInCategoryCommand implements ReturnManyCommand {
 
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
     @Autowired
     public GetTopPostsInCategoryCommand(PostRepository postRepository) {
         this.postRepository = postRepository;

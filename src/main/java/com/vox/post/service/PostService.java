@@ -22,6 +22,7 @@ public class PostService {
     private UpdateCommand updatePostCommand;
     private CategoryWithSkipCommand getCategoryPostsCommand;
 
+
     @Autowired
     public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, CheckAuthorCommand checkIfAuthorizedCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, UpdateCommand updatePostCommand, CategoryWithSkipCommand getCategoryPostsCommand, ReturnManyCommand getTopPostsInCategoriesCommand){
         this.getAllPostsCommand = getAllPostsCommand;
@@ -46,19 +47,14 @@ public class PostService {
         return getPostCommand.execute(id);
     }
     public Post deletePost(String sessionId, String postId){
-//        TODO: Uncomment this when authentication is implemented
-//        MongoId userId = getUserIdFromSession.execute(sessionId);
-//        if(!checkIfAuthorCommand.execute(userId)){
-//            throw new IllegalStateException("Invalid session ID");
-//        }
+        String userId = getUserIdFromSession.execute(sessionId);
+        if(!checkIfAuthorizedCommand.execute(userId, postId)){
+            throw new IllegalStateException("Only author is authorized to update the post");
+        }
         return deletePostCommand.execute(postId);
     }
     public Post addPost(String sessionId, Post post){
-//        TODO: Uncomment this when authentication is implemented
-//        MongoId userId = getUserIdFromSession.execute(sessionId);
-//        if(!checkIfAuthorCommand.execute(userId)){
-//            throw new IllegalStateException("Invalid session ID");
-//        }
+        String userId = getUserIdFromSession.execute(sessionId);
         return addPostCommand.execute(post);
     }
 

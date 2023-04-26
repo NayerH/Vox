@@ -2,19 +2,15 @@ package com.vox.post.controller;
 
 import com.vox.post.model.Category;
 import com.vox.post.model.Post;
-import com.vox.post.service.CacheService;
 import com.vox.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,11 +18,6 @@ import java.util.List;
 public class PostController {
 
     private PostService postService;
-
-    private LocalDate date = LocalDate.now().minus(1, java.time.temporal.ChronoUnit.MONTHS);
-
-    @Autowired
-    private CacheService cacheService;
 
     @Autowired
     public PostController(PostService postService) {
@@ -38,20 +29,21 @@ public class PostController {
     }
 
 
+//    QUESTION: Should we implement a method that caches most viewed (e.g. top 10) posts in general every hour?
+
 //    Returns all posts
     @GetMapping
     public List<Post> getPosts() {
         return postService.getPosts();
     }
 
-//    Return a post by id and cache it if it has more than n views and is not older than 1 month
-//    @Cacheable(value = "posts", key = "#id", unless = "{#result.views < ${spring.cache.views} && #result.publishedAt.before(cacheService.getCurrentDate())}")
-    @Cacheable(value="posts", keyGenerator = "postsByIdKeyGenerator")
+    @Cacheable(value="posts", key = "#id")
     @GetMapping("/get/{id}")
     public Post getPost(@PathVariable("id") String id) {
         return postService.getPost(id);
     }
 
+//    FIXME: Check if the person posting is an author by caching or SAGA method
     @PostMapping
     @CachePut(value = "posts", key = "#post.id") //Cache newly added posts
     public Post addPost(HttpSession session, @Validated @RequestBody Post post) {

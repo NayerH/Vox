@@ -35,7 +35,7 @@ public class Post implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd@HH:mm")
     @Indexed
-    private LocalDate publishedAt = LocalDate.now();
+    private Date publishedAt = new Date();
 
     private List<String> tags;
 
@@ -89,11 +89,11 @@ public class Post implements Serializable {
         this.authorId = authorId;
     }
 
-    public LocalDate getPublishedAt() {
+    public Date getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(LocalDate publishedAt) {
+    public void setPublishedAt(Date publishedAt) {
         this.publishedAt = publishedAt;
     }
 

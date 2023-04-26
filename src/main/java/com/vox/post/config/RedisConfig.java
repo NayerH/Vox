@@ -1,9 +1,7 @@
 package com.vox.post.config;
 
-import com.vox.post.cache.PostByIdKeyGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachingConfigurer;
-import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -61,11 +59,6 @@ public class RedisConfig implements CachingConfigurer {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory();
-    }
-
-    @Bean
-    public KeyGenerator postsByIdKeyGenerator() {
-        return new PostByIdKeyGenerator();
     }
 
 
