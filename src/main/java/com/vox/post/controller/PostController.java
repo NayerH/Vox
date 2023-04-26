@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +28,15 @@ public class PostController {
         this.postService = postService;
     }
 
+
+//    Returns all posts
     @GetMapping
     public List<Post> getPosts() {
         return postService.getPosts();
     }
 
-    @Cacheable(value = "posts", key = "#id", unless = "#result.views < 1000") //Cache posts on request with views > 1000
+//    Return a post by id and cache it if it has more than 1000 views
+    @Cacheable(value = "posts", key = "#id", unless = "#result.views < 1000")
     @GetMapping("/{id}")
     public Post getPost(@PathVariable String id) {
         return postService.getPost(id);
@@ -44,6 +45,7 @@ public class PostController {
     @PostMapping
     @CachePut(value = "posts", key = "#post.id") //Cache newly added posts
     public Post addPost(HttpSession session, @Validated @RequestBody Post post) {
+//        TODO: Add Media Server
         return postService.addPost(session.getId(), post);
     }
 
@@ -60,12 +62,14 @@ public class PostController {
         return postService.updatePost(session.getId(), id, post);
     }
 
+//    Returns top 3 posts in a category and caches the result after each request
     @GetMapping("/categories")
     @CachePut(value = "posts", key = "#category") //Cache top 3 posts in a category
     public List<Post> getTopPosts(@RequestParam("category") Category.CategoryEnum category) {
         return postService.getTopPostsInCategory(category);
     }
 
+//    Returns top posts in all categories from cache & is updated every hour
     @GetMapping("/categories/top")
     public List<Post> getTopPostsPerCategories(){
         return postService.getTopPostsInCategories();

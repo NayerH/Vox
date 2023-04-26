@@ -44,17 +44,6 @@ public class Post implements Serializable {
 
     private List<Comment> comments;
 
-//    public Post() {
-//    }
-//
-//    public Post(Long views, @NonNull String title, @NonNull String content, @NonNull Long authorId, @NonNull Category.CategoryEnum category) {
-//        this.views = views;
-//        this.title = title;
-//        this.content = content;
-//        this.authorId = authorId;
-//        this.category = category;
-//    }
-
 
     public ObjectId getId() {
         return id;

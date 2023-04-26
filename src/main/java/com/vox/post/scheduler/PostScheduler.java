@@ -23,13 +23,10 @@ public class PostScheduler {
         this.redisTemplate = redisTemplate;
     }
 
-    @Scheduled(cron = "0 0 * * * *") //runs every one hour
+    @Scheduled(cron = "0 0 * * * *") //runs every one hour at the beginning of the hour
     public void fetchTopPostsInCategories(){
         List<Post> topPostsInCategories = postService.getTopPostsInCategories();
-        for (Post post:
-             topPostsInCategories) {
-            redisTemplate.opsForValue().set(post.getId().toString(), post);
-        }
+        redisTemplate.opsForValue().set("topPostsInAllCategories", topPostsInCategories);
     }
 
 }

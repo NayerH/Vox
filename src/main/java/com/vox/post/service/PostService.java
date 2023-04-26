@@ -16,7 +16,7 @@ import java.util.List;
 public class PostService {
     //Commands
     private ReturnManyCommand getAllPostsCommand;
-    private ReturnOneCommand addPostCommand;
+    private final ReturnOneCommand addPostCommand;
     private ReturnOneCommand getPostCommand;
     private ReturnOneCommand deletePostCommand;
     private AuthenticationCommand checkIfAuthorCommand;
@@ -37,13 +37,16 @@ public class PostService {
     }
 
     //Functionalities
+//    Get all posts
     public List<Post> getPosts(){
         return getAllPostsCommand.execute(null);
     }
+//    Get post by id
     public Post getPost(String id){
         return getPostCommand.execute(id);
     }
     public Post deletePost(String sessionId, String postId){
+//        TODO: Uncomment this when authentication is implemented
 //        MongoId userId = getUserIdFromSession.execute(sessionId);
 //        if(!checkIfAuthorCommand.execute(userId)){
 //            throw new IllegalStateException("Invalid session ID");
@@ -51,6 +54,7 @@ public class PostService {
         return deletePostCommand.execute(postId);
     }
     public Post addPost(String sessionId, Post post){
+//        TODO: Uncomment this when authentication is implemented
 //        MongoId userId = getUserIdFromSession.execute(sessionId);
 //        if(!checkIfAuthorCommand.execute(userId)){
 //            throw new IllegalStateException("Invalid session ID");
@@ -58,116 +62,19 @@ public class PostService {
         return addPostCommand.execute(post);
     }
 
+//    TODO: Implement Update Functionality
     public Post updatePost(String id, String id1, Post post) {
         return null;
     }
 
+//    Returns top posts in a category
     public List<Post> getTopPostsInCategory(Category.CategoryEnum categoryEnum){
         return getTopPostsInCategoryCommand.execute(categoryEnum);
     }
 
+//    Return top posts in all categories
     public List<Post> getTopPostsInCategories() {
-        return getTopPostsInCategoriesCommand.execute(3);
+        return getTopPostsInCategoriesCommand.execute(null);
     }
 
-    //Setters
-//    public void setGetTopPostsInCategoryCommand(){
-//        Class c;
-//        try{
-//            c = Class.forName("com.vox.post.service.GetTopPostsInCategoryCommand");
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        try{
-//            getTopPostsInCategoryCommand = (ReturnManyCommand) c.newInstance();
-//        } catch (InstantiationException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-//    public void setGetAllPostsCommand(){
-//        Class c;
-//        try {
-//            c = Class.forName("com.vox.post.service.GetAllPostsCommand");
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        try {
-//            getAllPostsCommand = (ReturnManyCommand) c.newInstance();
-//        } catch (InstantiationException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    public void setGetPostCommand(){
-//        Class c;
-//        try {
-//            c = Class.forName("com.vox.post.service.GetPostCommand");
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        try {
-//            getPostCommand = (ReturnOneCommand) c.newInstance();
-//        } catch (InstantiationException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    public void setDeletePostCommand(){
-//        Class c;
-//        try {
-//            c = Class.forName("com.vox.post.service.DeletePostCommand");
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        try {
-//            deletePostCommand = (ReturnOneCommand) c.newInstance();
-//        } catch (InstantiationException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    public void setAddPostCommand(){
-//        Class c;
-//        try {
-//            c = Class.forName("com.vox.post.service.AddPostCommand");
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        try {
-//            addPostCommand = (ReturnOneCommand) c.newInstance();
-//        } catch (InstantiationException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    public void setCheckIfAuthorCommand() {
-//        Class c;
-//        try {
-//            c = Class.forName("com.vox.post.service.CheckIfAuthorCommand");
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        try {
-//            checkIfAuthorCommand = (AuthenticationCommand) c.newInstance();
-//        } catch (InstantiationException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    public void setGetUserIdFromSession() {
-//        Class c;
-//        try {
-//            c = Class.forName("com.vox.post.service.GetUserIdFromSession");
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        try {
-//            getUserIdFromSession = (ReturnIdCommand) c.newInstance();
-//        } catch (InstantiationException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 }
