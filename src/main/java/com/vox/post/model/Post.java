@@ -7,9 +7,11 @@ import jakarta.persistence.TemporalType;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +34,8 @@ public class Post implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd@HH:mm")
-    private Date publishedAt = new Date();
+    @Indexed
+    private LocalDate publishedAt = LocalDate.now();
 
     private List<String> tags;
 
@@ -86,11 +89,11 @@ public class Post implements Serializable {
         this.authorId = authorId;
     }
 
-    public Date getPublishedAt() {
+    public LocalDate getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(Date publishedAt) {
+    public void setPublishedAt(LocalDate publishedAt) {
         this.publishedAt = publishedAt;
     }
 
