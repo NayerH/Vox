@@ -5,7 +5,6 @@ import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
 import com.vox.post.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +19,7 @@ public class PostService {
     private CheckAuthorCommand checkIfAuthorizedCommand;
     private ReturnIdCommand getUserIdFromSession;
     private ReturnManyCommand getTopPostsInCategoryCommand;
+    private ReturnManyCommand getTopPostsInCategoriesCommand;
     private UpdateCommand updatePostCommand;
     private CategoryWithSkipCommand getCategoryPostsCommand;
     private AddCommentCommand addComment;
@@ -37,6 +37,7 @@ public class PostService {
                        CategoryWithSkipCommand getCategoryPostsCommand,
                        AddCommentCommand addComment,
                        AddReplyCommand addReply) {
+
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
         this.getPostCommand = getPostCommand;
@@ -48,23 +49,29 @@ public class PostService {
         this.getCategoryPostsCommand = getCategoryPostsCommand;
         this.addComment = addComment;
         this.addReply = addReply;
+
     }
 
     //Functionalities
+//    Get all posts
     public List<Post> getPosts(){
         return getAllPostsCommand.execute(null);
     }
-    public Post getPost(MongoId id){
+//    Get post by id
+    public Post getPost(String id){
         return getPostCommand.execute(id);
     }
-//    public Post deletePost(String sessionId, MongoId postId){
-//        String userId = getUserIdFromSession.execute(sessionId);
-//        if(!checkIfAuthorizedCommand.execute(userId, postId)){
-//            throw new IllegalStateException("Only author is authorized to delete the post");
+
+    public Post deletePost(String sessionId, String postId){
+//        TODO: Uncomment this when authentication is implemented
+//        MongoId userId = getUserIdFromSession.execute(sessionId);
+//        if(!checkIfAuthorCommand.execute(userId)){
+//            throw new IllegalStateException("Invalid session ID");
 //        }
-//        return deletePostCommand.execute(postId);
-//    }
+        return deletePostCommand.execute(postId);
+    }
     public Post addPost(String sessionId, Post post){
+//        TODO: Uncomment this when authentication is implemented
 //        MongoId userId = getUserIdFromSession.execute(sessionId);
 //        if(!checkIfAuthorCommand.execute(userId)){
 //            throw new IllegalStateException("Invalid session ID");
@@ -72,24 +79,30 @@ public class PostService {
         return addPostCommand.execute(post);
     }
 
-//    public Post updatePost(
-//            String sessionId,
-//            MongoId postId,
-//            String title,
-//            String content,
-//            List<String> tags,
-//            Category.CategoryEnum category,
-//            List<Long> mediaFiles
-//    ) {
-//        MongoId userId = getUserIdFromSession.execute(sessionId);
-//        if(!checkIfAuthorizedCommand.execute(userId, postId)){
-//            throw new IllegalStateException("Only author is authorized to update the post");
-//        }
-//        return updatePostCommand.execute(postId, title, content, tags, category, mediaFiles);
-//    }
+    public Post updatePost(
+            String sessionId,
+            String postId,
+            String title,
+            String content,
+            List<String> tags,
+            Category.CategoryEnum category,
+            List<Long> mediaFiles
+    ) {
+        String userId = getUserIdFromSession.execute(sessionId);
+        if(!checkIfAuthorizedCommand.execute(userId, postId)){
+            throw new IllegalStateException("Only author is authorized to update the post");
+        }
+        return updatePostCommand.execute(postId, title, content, tags, category, mediaFiles);
+    }
 
+//    Returns top posts in a category
     public List<Post> getTopPostsInCategory(Category.CategoryEnum categoryEnum){
         return getTopPostsInCategoryCommand.execute(categoryEnum);
+    }
+
+//    Return top posts in all categories
+    public List<Post> getTopPostsInCategories() {
+        return getTopPostsInCategoriesCommand.execute(null);
     }
 
     public List<Post> getCategoryPosts(Category.CategoryEnum category, Integer skip) {
@@ -137,6 +150,12 @@ public class PostService {
     public void setGetTopPostsInCategoryCommand(ReturnManyCommand getTopPostsInCategoryCommand) {
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
     }
+
+    @Autowired
+    public void setGetTopPostsInCategoriesCommand(ReturnManyCommand getTopPostsInCategoriesCommand) {
+        this.getTopPostsInCategoriesCommand = getTopPostsInCategoriesCommand;
+    }
+
     @Autowired
     public void setUpdatePostCommand(UpdateCommand updatePostCommand) {
         this.updatePostCommand = updatePostCommand;
@@ -145,4 +164,6 @@ public class PostService {
     public void setGetCategoryPostsCommand(CategoryWithSkipCommand getCategoryPostsCommand) {
         this.getCategoryPostsCommand = getCategoryPostsCommand;
     }
+
+
 }

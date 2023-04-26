@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class CheckIfAuthorizedCommand implements CheckAuthorCommand {
 
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
     @Autowired
     public CheckIfAuthorizedCommand(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
 
     @Override
-    public Boolean execute(MongoId userId, MongoId authorId) {
+    public Boolean execute(String userId, String authorId) {
         String postAuthorId = this.postRepository.findPostByIdAndReturnAuthor(userId);
-        return authorId.toString().equals(postAuthorId);
+        return authorId.equals(postAuthorId);
     }
 }

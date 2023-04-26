@@ -3,9 +3,11 @@ package com.vox.post.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mongodb.lang.NonNull;
 import jakarta.persistence.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+@Document
 public class MediaFile {
     @Id
     private Long id;
