@@ -65,13 +65,15 @@ public class PostController {
 
 //    Returns top posts in all categories from cache & is updated every hour
     @GetMapping("/categories/top")
-    public List<Post> getTopPostsPerCategories(){
+    public List<Post> getTopPostsPerCategories() {
         return postService.getTopPostsInCategories();
-        
+    }
+
+    @PutMapping("/{id}")
     @CachePut(value = "posts", key = "#{id}") //Cache recently updated posts
     public Post updatePost(
             HttpSession session,
-            @PathVariable MongoId id,
+            @PathVariable String id,
             @RequestBody(required = false) String title,
             @RequestBody(required = false) String content,
             @RequestBody(required = false) List<String> tags,

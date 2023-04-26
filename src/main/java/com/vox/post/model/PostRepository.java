@@ -36,6 +36,6 @@ public interface PostRepository extends MongoRepository<Post, String> {
     Optional<List<Post>> findTopPostsInEachCategory(Integer limit);
 
     @Query(value="{'id':'?0'}", fields="{'authorId' : 1}")
-    String findPostByIdAndReturnAuthor(MongoId postId);
+    String findPostByIdAndReturnAuthor(String postId);
 
 }

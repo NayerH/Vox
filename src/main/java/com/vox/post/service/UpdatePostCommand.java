@@ -5,7 +5,6 @@ import com.vox.post.model.Post;
 import com.vox.post.model.PostRepository;
 import com.vox.post.service.interfaces.UpdateCommand;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class UpdatePostCommand implements UpdateCommand {
     }
 
     @Override
-    public Post execute(MongoId postId,
+    public Post execute(String postId,
                         String title,
                         String content,
                         List<String> tags,
