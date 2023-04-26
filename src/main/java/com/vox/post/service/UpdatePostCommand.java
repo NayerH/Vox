@@ -2,7 +2,7 @@ package com.vox.post.service;
 
 import com.vox.post.model.Category;
 import com.vox.post.model.Post;
-import com.vox.post.model.PostRepository;
+import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.UpdateCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

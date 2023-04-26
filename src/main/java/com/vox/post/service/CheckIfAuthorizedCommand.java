@@ -1,9 +1,8 @@
 package com.vox.post.service;
 
-import com.vox.post.model.PostRepository;
+import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.CheckAuthorCommand;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Service;
 
 @Service

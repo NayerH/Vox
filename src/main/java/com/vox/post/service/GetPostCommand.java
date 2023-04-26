@@ -1,10 +1,9 @@
 package com.vox.post.service;
 
 import com.vox.post.model.Post;
-import com.vox.post.model.PostRepository;
+import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.ReturnOneCommand;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
