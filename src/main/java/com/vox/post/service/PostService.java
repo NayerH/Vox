@@ -12,19 +12,18 @@ import java.util.List;
 public class PostService {
     //Commands
     private ReturnManyCommand getAllPostsCommand;
-    private final ReturnOneCommand addPostCommand;
+    private ReturnOneCommand addPostCommand;
     private ReturnOneCommand getPostCommand;
     private ReturnOneCommand deletePostCommand;
     private CheckAuthorCommand checkIfAuthorizedCommand;
     private ReturnIdCommand getUserIdFromSession;
-    private final ReturnManyCommand getTopPostsInCategoryCommand;
-    private final ReturnManyCommand getTopPostsInCategoriesCommand;
     private ReturnManyCommand getTopPostsInCategoryCommand;
+    private ReturnManyCommand getTopPostsInCategoriesCommand;
     private UpdateCommand updatePostCommand;
     private CategoryWithSkipCommand getCategoryPostsCommand;
 
     @Autowired
-    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, CheckAuthorCommand checkIfAuthorizedCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, UpdateCommand updatePostCommand, CategoryWithSkipCommand getCategoryPostsCommand) {
+    public PostService(ReturnManyCommand getAllPostsCommand, ReturnOneCommand addPostCommand, ReturnOneCommand getPostCommand, ReturnOneCommand deletePostCommand, CheckAuthorCommand checkIfAuthorizedCommand, ReturnIdCommand getUserIdFromSession, ReturnManyCommand getTopPostsInCategoryCommand, UpdateCommand updatePostCommand, CategoryWithSkipCommand getCategoryPostsCommand, ReturnManyCommand getTopPostsInCategoriesCommand){
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
         this.getPostCommand = getPostCommand;
@@ -32,9 +31,9 @@ public class PostService {
         this.checkIfAuthorizedCommand = checkIfAuthorizedCommand;
         this.getUserIdFromSession = getUserIdFromSession;
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
-        this.getTopPostsInCategoriesCommand = getTopPostsInCategoriesCommand;
         this.updatePostCommand = updatePostCommand;
         this.getCategoryPostsCommand = getCategoryPostsCommand;
+        this.getTopPostsInCategoriesCommand = getTopPostsInCategoriesCommand;
     }
 
     //Functionalities
@@ -65,14 +64,14 @@ public class PostService {
 
     public Post updatePost(
             String sessionId,
-            MongoId postId,
+            String postId,
             String title,
             String content,
             List<String> tags,
             Category.CategoryEnum category,
             List<Long> mediaFiles
     ) {
-        MongoId userId = getUserIdFromSession.execute(sessionId);
+        String userId = getUserIdFromSession.execute(sessionId);
         if(!checkIfAuthorizedCommand.execute(userId, postId)){
             throw new IllegalStateException("Only author is authorized to update the post");
         }
@@ -122,6 +121,12 @@ public class PostService {
     public void setGetTopPostsInCategoryCommand(ReturnManyCommand getTopPostsInCategoryCommand) {
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
     }
+
+    @Autowired
+    public void setGetTopPostsInCategoriesCommand(ReturnManyCommand getTopPostsInCategoriesCommand) {
+        this.getTopPostsInCategoriesCommand = getTopPostsInCategoriesCommand;
+    }
+
     @Autowired
     public void setUpdatePostCommand(UpdateCommand updatePostCommand) {
         this.updatePostCommand = updatePostCommand;
@@ -130,4 +135,6 @@ public class PostService {
     public void setGetCategoryPostsCommand(CategoryWithSkipCommand getCategoryPostsCommand) {
         this.getCategoryPostsCommand = getCategoryPostsCommand;
     }
+
+
 }
