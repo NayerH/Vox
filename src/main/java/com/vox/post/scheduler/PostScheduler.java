@@ -1,8 +1,8 @@
 package com.vox.post.scheduler;
 
 import com.vox.post.model.Post;
-import com.vox.post.model.PostRepository;
-import com.vox.post.service.PostService;
+
+import com.vox.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
