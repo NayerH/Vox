@@ -1,4 +1,7 @@
-package com.vox.post.model;
+package com.vox.post.repository;
+
+import com.vox.post.model.Category;
+import com.vox.post.model.Post;
 
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;

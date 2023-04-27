@@ -1,6 +1,7 @@
 package com.vox.post.controller;
 
 import com.vox.post.model.Category;
+import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
 import com.vox.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
@@ -31,7 +32,7 @@ public class PostController {
 //    QUESTION: Should we implement a method that caches most viewed (e.g. top 10) posts in general every hour?
 
 //    Returns all posts
-    @GetMapping
+    @GetMapping("/get")
     public List<Post> getPosts() {
         return postService.getPosts();
     }
@@ -42,12 +43,13 @@ public class PostController {
     }
 
 //    FIXME: Check if the person posting is an author by caching or SAGA method
-    @PostMapping
+    @PostMapping("/add")
     @CachePut(value = "posts", key = "#post.id") //Cache newly added posts
     public Post addPost(HttpSession session, @Validated @RequestBody Post post) {
 //        TODO: Add Media Server [Hashing authorId + title + date]
         return postService.addPost(session.getId(), post);
     }
+
 
     @DeleteMapping("/delete/{id}")
     @CacheEvict(value = "posts", key = "#id") //Evict cached posts by id
@@ -71,7 +73,7 @@ public class PostController {
         return postService.getTopPostsInCategories();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     @CachePut(value = "posts", key = "#{id}") //Cache recently updated posts
     public Post updatePost(
             HttpSession session,
@@ -93,7 +95,7 @@ public class PostController {
         );
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/categories/{category}")
     public List<Post> getCategoryPosts(
             @PathVariable Category.CategoryEnum category,
             @RequestBody(required = false) Integer skip
@@ -101,4 +103,13 @@ public class PostController {
         return postService.getCategoryPosts(category, skip);
     }
 
+    @PutMapping(path = "/comments/{postId}")
+    public void addComment(HttpSession session, @PathVariable("postId") String postId, @RequestBody Comment comment) {
+        postService.addComment(session.getId(), postId, comment);
+    }
+
+    @PutMapping(path = "/comments/{postId}/{commentId}")
+    public void addReply(HttpSession session, @PathVariable("postId") String postId, @PathVariable("commentId") String commentId, @RequestBody Comment reply) {
+        postService.addReply(session.getId(), postId, commentId, reply);
+    }
 }

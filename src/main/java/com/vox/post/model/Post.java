@@ -12,8 +12,6 @@ import org.springframework.data.redis.core.index.Indexed;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Document(collection = "Post")

@@ -1,16 +1,15 @@
-package com.vox.post.service;
+package com.vox.post.service.commands;
 
+import com.vox.post.exception.ApiRequestException;
 import com.vox.post.model.Post;
-import com.vox.post.model.PostRepository;
+import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.ReturnOneCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.Optional;
 
 @Component
@@ -18,6 +17,7 @@ public class GetPostCommand implements ReturnOneCommand {
     private final PostRepository postRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final LocalDateTime MAX_DATE = LocalDateTime.now().minus(1, ChronoUnit.MONTHS);
+
     @Autowired
     public GetPostCommand(PostRepository postRepository, RedisTemplate<String, Object> redisTemplate) {
         this.postRepository = postRepository;
@@ -41,6 +41,6 @@ public class GetPostCommand implements ReturnOneCommand {
             }
             return p;
         }
-        throw new IllegalStateException("No post is available with id " + m);
+        throw new ApiRequestException("No post is available with id " + m);
     }
 }

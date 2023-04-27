@@ -5,15 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+//SHOULD BE INSTANTIATED IN THE COMMAND CLASS THAT SENDS A MESSAGE ON THAT QUEUE
 @Component
-public abstract class sendRabbitMQCommand implements Command {
-    @Value("${rabbitmq.userexchange.name")
+public class RabbitMQProducer {
+    @Value("${rabbitmq.exchange.name")
     private String exchange;
-    @Value("${rabbitmq.routing.key")
+    @Value("${rabbitmq.routing1.key")
     private String routingKey;
     private final RabbitTemplate rabbitTemplate;
     @Autowired
-    public sendRabbitMQCommand(RabbitTemplate rabbitTemplate) {
+    public RabbitMQProducer(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 

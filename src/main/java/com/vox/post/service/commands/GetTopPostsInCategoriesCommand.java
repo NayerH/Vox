@@ -1,7 +1,7 @@
-package com.vox.post.service;
+package com.vox.post.service.commands;
 
 import com.vox.post.model.Post;
-import com.vox.post.model.PostRepository;
+import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.ReturnManyCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

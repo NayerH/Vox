@@ -1,4 +1,4 @@
-package com.vox.post.service;
+package com.vox.post.service.commands;
 
 import com.vox.post.service.interfaces.ReturnIdCommand;
 import org.springframework.data.redis.core.RedisTemplate;
