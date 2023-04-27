@@ -1,5 +1,6 @@
 package com.vox.post.service.commands;
 
+import com.vox.post.exception.ApiRequestException;
 import com.vox.post.model.Post;
 import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.ReturnOneCommand;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Component
 public class GetPostCommand implements ReturnOneCommand {
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
     @Autowired
     public GetPostCommand(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -25,6 +26,6 @@ public class GetPostCommand implements ReturnOneCommand {
             this.postRepository.save(p);
             return p;
         }
-        throw new IllegalStateException("No post is available with id " + m);
+        throw new ApiRequestException("No post is available with id " + m);
     }
 }

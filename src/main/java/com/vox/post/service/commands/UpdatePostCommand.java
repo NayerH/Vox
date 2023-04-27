@@ -1,5 +1,6 @@
 package com.vox.post.service.commands;
 
+import com.vox.post.exception.ApiRequestException;
 import com.vox.post.model.Category;
 import com.vox.post.model.Post;
 import com.vox.post.repository.PostRepository;
@@ -26,7 +27,7 @@ public class UpdatePostCommand implements UpdateCommand {
                         List<Long> mediaFiles)
     {
         Post post = this.postRepository.findById(postId).orElseThrow(
-                () -> new IllegalStateException("Post with id " + postId + " does not exist")
+                () -> new ApiRequestException("Post with id " + postId + " does not exist")
         );
         if (checkValidString(title, post.getTitle())){
             post.setTitle(title);

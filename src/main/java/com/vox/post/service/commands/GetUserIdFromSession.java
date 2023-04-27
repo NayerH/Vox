@@ -9,7 +9,7 @@ public class GetUserIdFromSession implements ReturnIdCommand {
     @Override
     public String execute(String sessionId) {
         //Implementation for Seif - Check sessionId if valid or not in cache then return userId
-        //Return IllegalStateException("Invalid session ID")
+        //Return ApiUnauthorizedException("Invalid session ID")
         return null;
     }
 }

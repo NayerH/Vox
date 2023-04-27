@@ -1,5 +1,6 @@
 package com.vox.post.service.commands;
 
+import com.vox.post.exception.ApiRequestException;
 import com.vox.post.model.Category;
 import com.vox.post.model.Post;
 import com.vox.post.repository.PostRepository;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @Component
 public class GetTopPostsInCategoryCommand implements ReturnManyCommand {
 
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
     @Autowired
     public GetTopPostsInCategoryCommand(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -26,7 +27,7 @@ public class GetTopPostsInCategoryCommand implements ReturnManyCommand {
         if(optionalPost.isPresent()){
             return optionalPost.get();
         }
-        throw new IllegalStateException("No post is available with category " + c);
+        throw new ApiRequestException("No post is available with category " + c);
     }
 
 }

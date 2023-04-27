@@ -1,5 +1,6 @@
 package com.vox.post.service.commands;
 
+import com.vox.post.exception.ApiRequestException;
 import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
 import com.vox.post.repository.PostRepository;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddCommentCommand implements IAddCommentCommand {
 
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Autowired
     public AddCommentCommand(PostRepository postRepository) {
@@ -21,9 +22,9 @@ public class AddCommentCommand implements IAddCommentCommand {
     @Override
     public void execute(String userId, String postId, Comment comment) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalStateException("Post with Id: " + postId + " does not exist"));
+                .orElseThrow(() -> new ApiRequestException("Post with Id: " + postId + " does not exist"));
         comment.setUserId(userId);
-        post.addComment(comment);
+        post.getComments().add(comment);
         this.postRepository.save(post);
     }
 }

@@ -18,7 +18,7 @@ public class CouchbaseConfig {
 
     @Bean(destroyMethod = "disconnect")
     public Cluster getCouchbaseCluster() {
-        return Cluster.connect(couchbaseProperties.getHostName(), couchbaseProperties.getUsername(), couchbaseProperties.getPassword());
+        return Cluster.connect(couchbaseProperties.getConnectionString(), couchbaseProperties.getUsername(), couchbaseProperties.getPassword());
     }
 
     @Bean

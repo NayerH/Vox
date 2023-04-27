@@ -1,5 +1,6 @@
 package com.vox.post.service;
 
+import com.vox.post.exception.ApiUnauthorizedException;
 import com.vox.post.model.Category;
 import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
@@ -23,8 +24,8 @@ public class PostService {
     private ReturnManyCommand getTopPostsInCategoriesCommand;
     private UpdateCommand updatePostCommand;
     private CategoryWithSkipCommand getCategoryPostsCommand;
-    private AddCommentCommand addComment;
-    private IAddReplyCommand addReply;
+    private IAddCommentCommand addCommentCommand;
+    private IAddReplyCommand addReplyCommand;
 
     @Autowired
     public PostService(ReturnManyCommand getAllPostsCommand,
@@ -36,8 +37,8 @@ public class PostService {
                        ReturnManyCommand getTopPostsInCategoryCommand,
                        UpdateCommand updatePostCommand,
                        CategoryWithSkipCommand getCategoryPostsCommand,
-                       AddCommentCommand addComment,
-                       IAddReplyCommand addReply) {
+                       AddCommentCommand addCommentCommand,
+                       IAddReplyCommand addReplyCommand) {
 
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
@@ -48,8 +49,8 @@ public class PostService {
         this.getTopPostsInCategoryCommand = getTopPostsInCategoryCommand;
         this.updatePostCommand = updatePostCommand;
         this.getCategoryPostsCommand = getCategoryPostsCommand;
-        this.addComment = addComment;
-        this.addReply = addReply;
+        this.addCommentCommand = addCommentCommand;
+        this.addReplyCommand = addReplyCommand;
 
     }
 
@@ -64,18 +65,17 @@ public class PostService {
     }
 
     public Post deletePost(String sessionId, String postId){
-//        TODO: Uncomment this when authentication is implemented
-//        MongoId userId = getUserIdFromSession.execute(sessionId);
-//        if(!checkIfAuthorCommand.execute(userId)){
-//            throw new IllegalStateException("Invalid session ID");
-//        }
+        String userId = getUserIdFromSession.execute(sessionId);
+        if(!checkIfAuthorizedCommand.execute(userId, postId)){
+            throw new ApiUnauthorizedException("Only author is authorized to update the post");
+        }
         return deletePostCommand.execute(postId);
     }
     public Post addPost(String sessionId, Post post){
 //        TODO: Uncomment this when authentication is implemented
 //        MongoId userId = getUserIdFromSession.execute(sessionId);
 //        if(!checkIfAuthorCommand.execute(userId)){
-//            throw new IllegalStateException("Invalid session ID");
+//            throw new ApiUnauthorizedException("Invalid session ID");
 //        }
         return addPostCommand.execute(post);
     }
@@ -91,7 +91,7 @@ public class PostService {
     ) {
         String userId = getUserIdFromSession.execute(sessionId);
         if(!checkIfAuthorizedCommand.execute(userId, postId)){
-            throw new IllegalStateException("Only author is authorized to update the post");
+            throw new ApiUnauthorizedException("Only author is authorized to update the post");
         }
         return updatePostCommand.execute(postId, title, content, tags, category, mediaFiles);
     }
@@ -113,13 +113,13 @@ public class PostService {
     public void addComment(String sessionId, String postId, Comment comment) {
         String userId = getUserIdFromSession.execute(sessionId);
         if (comment != null && comment.getContent().length() > 0)
-            addComment.execute(userId,postId,comment);
+            addCommentCommand.execute(userId,postId,comment);
     }
 
     public void addReply(String sessionId, String postId, String commentId, Comment reply) {
 //        String userId = getUserIdFromSession.execute(sessionId);
         if (reply != null && reply.getContent().length() > 0)
-            addReply.execute("userId",postId,commentId,reply);
+            addReplyCommand.execute("userId",postId,commentId,reply);
     }
 
     //Setters
@@ -165,6 +165,12 @@ public class PostService {
     public void setGetCategoryPostsCommand(CategoryWithSkipCommand getCategoryPostsCommand) {
         this.getCategoryPostsCommand = getCategoryPostsCommand;
     }
-
-
+    @Autowired
+    public void setAddCommentCommand(IAddCommentCommand addCommentCommand) {
+        this.addCommentCommand = addCommentCommand;
+    }
+    @Autowired
+    public void setAddReplyCommand(IAddReplyCommand addReplyCommand) {
+        this.addReplyCommand = addReplyCommand;
+    }
 }

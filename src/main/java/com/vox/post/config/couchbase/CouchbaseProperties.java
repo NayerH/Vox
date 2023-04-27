@@ -5,17 +5,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CouchbaseProperties {
-    @Value("${spring.couchbase.bootstrap-hosts}")
-    private String hostName;
-    @Value("${spring.couchbase.bucket.user}")
+    @Value("${spring.couchbase.connection-string}")
+    private String connectionString;
+    @Value("${spring.couchbase.user}")
     private String username;
-    @Value("${spring.couchbase.bucket.password}")
+    @Value("${spring.couchbase.password}")
     private String password;
-    @Value("${spring.couchbase.bucket.name}")
+    @Value("${spring.couchbase.bucket-name}")
     private String bucketName;
 
-    public String getHostName() {
-        return hostName;
+    public String getConnectionString() {
+        return connectionString;
     }
     public String getUsername() {
         return username;

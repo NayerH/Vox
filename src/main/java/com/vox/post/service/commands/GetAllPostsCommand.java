@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 public class GetAllPostsCommand implements ReturnManyCommand {
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
     @Autowired
     public GetAllPostsCommand(PostRepository postRepository) {
         this.postRepository = postRepository;
