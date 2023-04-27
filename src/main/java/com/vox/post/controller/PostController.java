@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,6 @@ public class PostController {
         return postService.getPosts();
     }
 
-    @Cacheable(value="posts", key = "#id")
     @GetMapping("/get/{id}")
     public Post getPost(@PathVariable("id") String id) {
         return postService.getPost(id);
@@ -65,6 +63,9 @@ public class PostController {
     }
 
 //    Returns top posts in all categories from cache & is updated every hour
+//    NOTE: The method won't update the cache ->
+//     1. if a post is trending ATM but wasn't trending an hour ago until the next hour
+//     2. if one of the cached posts is deleted or updated until the next hour
     @GetMapping("/categories/top")
     public List<Post> getTopPostsPerCategories() {
         return postService.getTopPostsInCategories();
