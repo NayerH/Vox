@@ -11,7 +11,7 @@ import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "Post")
@@ -34,7 +34,7 @@ public class Post implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd@HH:mm")
     @Indexed
-    private LocalDate publishedAt = LocalDate.now();
+    private LocalDateTime publishedAt = LocalDateTime.now();
 
     private List<String> tags;
 
@@ -88,11 +88,11 @@ public class Post implements Serializable {
         this.authorId = authorId;
     }
 
-    public LocalDate getPublishedAt() {
+    public LocalDateTime getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(LocalDate publishedAt) {
+    public void setPublishedAt(LocalDateTime publishedAt) {
         this.publishedAt = publishedAt;
     }
 

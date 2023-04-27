@@ -12,9 +12,6 @@ import java.util.List;
 @Component
 public class GetTopPostsInCategoriesCommand implements ReturnManyCommand {
 
-    @Autowired
-    private PostRepository postRepository;
-
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Autowired

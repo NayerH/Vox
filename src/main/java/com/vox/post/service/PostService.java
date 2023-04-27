@@ -27,6 +27,7 @@ public class PostService {
     private IAddCommentCommand addCommentCommand;
     private IAddReplyCommand addReplyCommand;
 
+
     @Autowired
     public PostService(ReturnManyCommand getAllPostsCommand,
                        ReturnOneCommand addPostCommand,
@@ -72,11 +73,7 @@ public class PostService {
         return deletePostCommand.execute(postId);
     }
     public Post addPost(String sessionId, Post post){
-//        TODO: Uncomment this when authentication is implemented
-//        MongoId userId = getUserIdFromSession.execute(sessionId);
-//        if(!checkIfAuthorCommand.execute(userId)){
-//            throw new ApiUnauthorizedException("Invalid session ID");
-//        }
+        String userId = getUserIdFromSession.execute(sessionId);
         return addPostCommand.execute(post);
     }
 
