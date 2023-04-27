@@ -11,17 +11,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-    @Value("${rabbitmq.queue1.name")
+    @Value("${rabbitmq.queue1.name}")
     private String queue1;
-    @Value("${rabbitmq.queue2.name")
+    @Value("${rabbitmq.queue2.name}")
     private String queue2;
 
-    @Value("${rabbitmq.exchange.name")
+    @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.routing1.key")
+    @Value("${rabbitmq.routing1.key}")
     private String key1;
-    @Value("${rabbitmq.routing2.key")
+    @Value("${rabbitmq.routing2.key}")
     private String key2;
 
     @Bean
@@ -50,7 +50,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public AmqpTemplate rabbitTemplate(ConnectionFactory connectionFactory){
+    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory){
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
         return rabbitTemplate;
