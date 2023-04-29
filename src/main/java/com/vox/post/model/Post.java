@@ -41,7 +41,7 @@ public class Post implements Serializable {
     @NonNull
     private Category.CategoryEnum category;
 
-    private List<Long> mediaFiles;
+    private String mediaFilesRefrence;
 
     private List<Comment> comments;
 
@@ -113,13 +113,6 @@ public class Post implements Serializable {
         this.category = category;
     }
 
-    public List<Long> getMediaFiles() {
-        return mediaFiles;
-    }
-
-    public void setMediaFiles(List<Long> mediaFiles) {
-        this.mediaFiles = mediaFiles;
-    }
 
     public List<Comment> getComments() {
         return comments;
@@ -129,6 +122,14 @@ public class Post implements Serializable {
         this.comments = comments;
     }
 
+    public String getMediaFilesRefrence() {
+        return mediaFilesRefrence;
+    }
+
+    public void setMediaFilesRefrence(String mediaFilesRefrence) {
+        this.mediaFilesRefrence = mediaFilesRefrence;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -136,13 +137,12 @@ public class Post implements Serializable {
                 ", views=" + views +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", authorId=" + authorId +
+                ", authorId='" + authorId + '\'' +
                 ", publishedAt=" + publishedAt +
                 ", tags=" + tags +
                 ", category=" + category +
-                ", mediaFiles=" + mediaFiles +
+                ", mediaFilesRefrence='" + mediaFilesRefrence + '\'' +
                 ", comments=" + comments +
                 '}';
     }
-
 }
