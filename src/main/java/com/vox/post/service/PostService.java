@@ -1,10 +1,9 @@
 package com.vox.post.service;
 
 import com.vox.post.exception.ApiUnauthorizedException;
-import com.vox.post.model.Category;
-import com.vox.post.model.Comment;
-import com.vox.post.model.Post;
+import com.vox.post.model.*;
 import com.vox.post.service.commands.AddCommentCommand;
+import com.vox.post.service.commands.AddMediaCommand;
 import com.vox.post.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,7 @@ public class PostService {
     private CategoryWithSkipCommand getCategoryPostsCommand;
     private IAddCommentCommand addCommentCommand;
     private IAddReplyCommand addReplyCommand;
+    private ReturnManyMediaCommand addMediaCommand;
 
 
     @Autowired
@@ -39,7 +39,8 @@ public class PostService {
                        UpdateCommand updatePostCommand,
                        CategoryWithSkipCommand getCategoryPostsCommand,
                        AddCommentCommand addCommentCommand,
-                       IAddReplyCommand addReplyCommand) {
+                       IAddReplyCommand addReplyCommand,
+                       ReturnManyMediaCommand addMediaCommand) {
 
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
@@ -52,6 +53,7 @@ public class PostService {
         this.getCategoryPostsCommand = getCategoryPostsCommand;
         this.addCommentCommand = addCommentCommand;
         this.addReplyCommand = addReplyCommand;
+        this.addMediaCommand = addMediaCommand;
 
     }
 
@@ -72,8 +74,12 @@ public class PostService {
         }
         return deletePostCommand.execute(postId);
     }
-    public Post addPost(String sessionId, Post post){
+    public Post addPost(String sessionId, Post post, List<MediaFile> mediaFiles){
         String userId = getUserIdFromSession.execute(sessionId);
+        Media savedMediaFiles = addMediaCommand.execute(new Media(mediaFiles, userId));
+        String mediaReference = String.valueOf(savedMediaFiles.getId());
+        post.setMediaFilesRefrence(mediaReference);
+        post.setAuthorId(userId);
         return addPostCommand.execute(post);
     }
 
@@ -84,13 +90,13 @@ public class PostService {
             String content,
             List<String> tags,
             Category.CategoryEnum category,
-            List<Long> mediaFiles
+            String mediaFilesReference
     ) {
         String userId = getUserIdFromSession.execute(sessionId);
         if(!checkIfAuthorizedCommand.execute(userId, postId)){
             throw new ApiUnauthorizedException("Only author is authorized to update the post");
         }
-        return updatePostCommand.execute(postId, title, content, tags, category, mediaFiles);
+        return updatePostCommand.execute(postId, title, content, tags, category, mediaFilesReference);
     }
 
 //    Returns top posts in a category
@@ -169,5 +175,9 @@ public class PostService {
     @Autowired
     public void setAddReplyCommand(IAddReplyCommand addReplyCommand) {
         this.addReplyCommand = addReplyCommand;
+    }
+    @Autowired
+    public void setAddMediaCommand(ReturnManyMediaCommand addMediaCommand) {
+        this.addMediaCommand = addMediaCommand;
     }
 }

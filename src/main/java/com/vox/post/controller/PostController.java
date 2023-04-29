@@ -1,8 +1,7 @@
 package com.vox.post.controller;
 
-import com.vox.post.model.Category;
-import com.vox.post.model.Comment;
-import com.vox.post.model.Post;
+import com.vox.post.controller.request.RequestWrapper;
+import com.vox.post.model.*;
 import com.vox.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +41,12 @@ public class PostController {
         return postService.getPost(id);
     }
 
-//    FIXME: Check if the person posting is an author by caching or SAGA method
     @PostMapping("/add")
-    @CachePut(value = "posts", key = "#post.id") //Cache newly added posts
-    public Post addPost(HttpSession session, @Validated @RequestBody Post post) {
-//        TODO: Add Media Server [Hashing authorId + title + date]
-        return postService.addPost(session.getId(), post);
+    @CachePut(value = "posts", key = "#result.id") //Cache newly added posts
+    public Post addPost(HttpSession session, @Validated @RequestBody RequestWrapper body) {
+        Post post = body.getPost();
+        List<MediaFile> mediaFiles = body.getMediaFiles();
+        return postService.addPost(session.getId(), post, mediaFiles);
     }
 
 
@@ -73,6 +72,8 @@ public class PostController {
         return postService.getTopPostsInCategories();
     }
 
+//    NOTE: This method will probably need a custom handler in order to retrieve the information from the request body
+//      Similar to the custom handler in the addPost method
     @PutMapping("/update/{id}")
     @CachePut(value = "posts", key = "#{id}") //Cache recently updated posts
     public Post updatePost(
@@ -82,7 +83,7 @@ public class PostController {
             @RequestBody(required = false) String content,
             @RequestBody(required = false) List<String> tags,
             @RequestBody(required = false) Category.CategoryEnum category,
-            @RequestBody(required = false) List<Long> mediaFiles
+            @RequestBody(required = false) String mediaFilesReference
     ) {
         return postService.updatePost(
                 session.getId(),
@@ -91,7 +92,7 @@ public class PostController {
                 content,
                 tags,
                 category,
-                mediaFiles
+                mediaFilesReference
         );
     }
 

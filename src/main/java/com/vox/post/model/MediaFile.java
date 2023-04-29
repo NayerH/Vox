@@ -2,7 +2,6 @@ package com.vox.post.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.lang.NonNull;
 
@@ -10,14 +9,9 @@ import java.util.Date;
 import java.util.UUID;
 
 
-@Document
 public class MediaFile {
     @Id
-    private String id;
-
-    @NonNull
-    @Field
-    private Long uploaderId;
+    private String id = UUID.randomUUID().toString();
 
     @Field
     private String title;
@@ -37,45 +31,57 @@ public class MediaFile {
     @Field
     private final Date publishedAt = new Date();
 
-    public MediaFile(@NonNull Long uploaderId, String title, String description, @NonNull String fileType, @NonNull String filePath, @NonNull Long fileSize) {
-        this.uploaderId = uploaderId;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
+    }
+
+    @NonNull
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(@NonNull String fileType) {
         this.fileType = fileType;
+    }
+
+    @NonNull
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(@NonNull String filePath) {
         this.filePath = filePath;
+    }
+
+    @NonNull
+    public Long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(@NonNull Long fileSize) {
         this.fileSize = fileSize;
     }
 
-    public MediaFile() {
-    }
-
-    public MediaFile(String id, @NonNull Long uploaderId, String title, String description, @NonNull String fileType, @NonNull String filePath, @NonNull Long fileSize) {
-        this.id = id;
-        this.uploaderId = uploaderId;
-        this.title = title;
-        this.description = description;
-        this.fileType = fileType;
-        this.filePath = filePath;
-        this.fileSize = fileSize;
-    }
-
-    public MediaFile getMediaFile() {
-        return new MediaFile(UUID.randomUUID().toString(), uploaderId, title, description, fileType, filePath, fileSize);
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public Date getPublishedAt() {
+        return publishedAt;
     }
 
     @Override
     public String toString() {
         return "MediaFile{" +
                 "id='" + id + '\'' +
-                ", uploaderId=" + uploaderId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", fileType='" + fileType + '\'' +
