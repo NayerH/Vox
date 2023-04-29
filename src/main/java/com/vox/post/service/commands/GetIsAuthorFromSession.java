@@ -17,7 +17,8 @@ public class GetIsAuthorFromSession implements CheckIfUserIsAuthorCommand {
 
     @Override
     public Boolean execute(String sessionId) {
-        Object isAuthor = redisTemplate.opsForValue().get(sessionId+"isAuthor");
+        //TODO: Remove Hardcoded Value
+        Object isAuthor = redisTemplate.opsForHash().get("C1E11A4E06310EBBDF1B864528C6F1A8", "isAuthor");
         if(isAuthor == null)
             throw new ApiUnauthorizedException("Invalid session ID");
         return (Boolean) isAuthor;

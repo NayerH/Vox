@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -27,11 +28,19 @@ public class RedisConfig implements CachingConfigurer {
 
     @Value(value = "${redis.timeout}")
     private String redisTimeout;
+    @Value(value = "${spring.redis.useCloud}")
+    private Boolean useCloud;
+
+    @Value(value = "${spring.redis.password}")
+    private String password;
+
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, Integer.parseInt(redisPort));
-
+        if(useCloud){
+            redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+        }
         JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
         jedisClientConfiguration.connectTimeout(Duration.ofSeconds(Integer.parseInt(redisTimeout)));
 

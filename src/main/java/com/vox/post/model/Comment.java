@@ -3,15 +3,17 @@ package com.vox.post.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mongodb.lang.NonNull;
 import jakarta.persistence.Id;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Document
+@Component
 public class Comment {
     @Id
     private String id;
@@ -24,14 +26,14 @@ public class Comment {
     private List<Comment> replies;
 
     @JsonFormat(pattern = "yyyy-MM-dd@HH:mm")
-    private Date publishedAt = new Date();
+    private LocalDate publishedAt = LocalDate.now();
 
     public Comment() {
         this.id = UUID.randomUUID().toString();
     }
 
     public void addReply(Comment reply) {
-        if (this.replies == null)
+        if(this.replies == null)
             this.replies = new ArrayList<>();
         this.replies.add(reply);
     }
@@ -58,6 +60,17 @@ public class Comment {
         return content;
     }
 
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", content='" + content + '\'' +
+                ", replies=" + replies +
+                ", publishedAt=" + publishedAt +
+                '}';
+    }
+
     public void setContent(@NonNull String content) {
         this.content = content;
     }
@@ -70,11 +83,11 @@ public class Comment {
         this.replies = replies;
     }
 
-    public Date getPublishedAt() {
+    public LocalDate getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(Date publishedAt) {
+    public void setPublishedAt(LocalDate publishedAt) {
         this.publishedAt = publishedAt;
     }
 }

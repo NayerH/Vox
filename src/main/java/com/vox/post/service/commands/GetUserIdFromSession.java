@@ -16,7 +16,8 @@ public class GetUserIdFromSession implements ReturnIdCommand {
 
     @Override
     public String execute(String sessionId) {
-        Object userId = redisTemplate.opsForValue().get(sessionId+"userId");
+        //TODO: Remove Hardcoded Value
+        Object userId = redisTemplate.opsForHash().get("C1E11A4E06310EBBDF1B864528C6F1A8", "userId");
         if(userId == null)
             throw new ApiUnauthorizedException("Invalid session ID");
         return (String) userId;

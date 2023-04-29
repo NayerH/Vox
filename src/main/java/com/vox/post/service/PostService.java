@@ -121,14 +121,16 @@ public class PostService {
 
     public void addComment(String sessionId, String postId, Comment comment) {
         String userId = getUserIdFromSession.execute(sessionId);
-        if (comment != null && comment.getContent().length() > 0)
-            addCommentCommand.execute(userId,postId,comment);
+        if (comment == null || comment.getContent() == null || comment.getContent().length() == 0)
+            throw new ApiUnauthorizedException("Comment cannot be empty");
+        addCommentCommand.execute(userId,postId,comment);
     }
 
     public void addReply(String sessionId, String postId, String commentId, Comment reply) {
-//        String userId = getUserIdFromSession.execute(sessionId);
-        if (reply != null && reply.getContent().length() > 0)
-            addReplyCommand.execute("userId",postId,commentId,reply);
+        String userId = getUserIdFromSession.execute(sessionId);
+        if (reply == null || reply.getContent() == null || reply.getContent().length() == 0)
+            throw new ApiUnauthorizedException("Reply cannot be empty");
+        addReplyCommand.execute(userId,postId,commentId,reply);
     }
 
     //Setters
