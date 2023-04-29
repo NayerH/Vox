@@ -25,13 +25,22 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     private String user;
     @Value("${spring.data.mongodb.password}")
     private String password;
+    @Value("${spring.data.mongodb.post.uri}")
+    private String uri;
+    @Value("${spring.data.mongodb.useUri}")
+    private Boolean useUri;
     @Autowired
     public MongoConfig(Environment env) {
         this.env = env;
     }
     @Override
     public MongoClient mongoClient() {
-        String uriString = "mongodb://" + user + ":" + password + "@" + host + ":" + port + "/" + db;
+        String uriString;
+        if(useUri){
+            uriString = uri;
+        } else {
+            uriString = "mongodb://" + user + ":" + password + "@" + host + ":" + port + "/" + db;
+        }
         ConnectionString connectionString = new ConnectionString(uriString);
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)

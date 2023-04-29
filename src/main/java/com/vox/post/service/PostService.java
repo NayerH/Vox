@@ -26,6 +26,7 @@ public class PostService {
     private IAddCommentCommand addCommentCommand;
     private IAddReplyCommand addReplyCommand;
     private ReturnManyMediaCommand addMediaCommand;
+    private CheckIfUserIsAuthorCommand getIsAuthorFromSession;
 
 
     @Autowired
@@ -40,7 +41,8 @@ public class PostService {
                        CategoryWithSkipCommand getCategoryPostsCommand,
                        AddCommentCommand addCommentCommand,
                        IAddReplyCommand addReplyCommand,
-                       ReturnManyMediaCommand addMediaCommand) {
+                       ReturnManyMediaCommand addMediaCommand,
+                       CheckIfUserIsAuthorCommand getIsAuthorFromSession) {
 
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
@@ -54,7 +56,7 @@ public class PostService {
         this.addCommentCommand = addCommentCommand;
         this.addReplyCommand = addReplyCommand;
         this.addMediaCommand = addMediaCommand;
-
+        this.getIsAuthorFromSession = getIsAuthorFromSession;
     }
 
     //Functionalities
@@ -75,6 +77,10 @@ public class PostService {
         return deletePostCommand.execute(postId);
     }
     public Post addPost(String sessionId, Post post, List<MediaFile> mediaFiles){
+        Boolean isAuthor = getIsAuthorFromSession.execute(sessionId);
+        if(!isAuthor){
+            throw new ApiUnauthorizedException("Only author is authorized to add a new post");
+        }
         String userId = getUserIdFromSession.execute(sessionId);
         Media savedMediaFiles = addMediaCommand.execute(new Media(mediaFiles, userId));
         String mediaReference = String.valueOf(savedMediaFiles.getId());
@@ -179,5 +185,9 @@ public class PostService {
     @Autowired
     public void setAddMediaCommand(ReturnManyMediaCommand addMediaCommand) {
         this.addMediaCommand = addMediaCommand;
+    }
+    @Autowired
+    public void setGetIsAuthorFromSession(CheckIfUserIsAuthorCommand getIsAuthorFromSession) {
+        this.getIsAuthorFromSession = getIsAuthorFromSession;
     }
 }
