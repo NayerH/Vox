@@ -31,7 +31,7 @@ public class PostController {
 //    QUESTION: Should we implement a method that caches most viewed (e.g. top 10) posts in general every hour?
 
 //    Returns all posts
-    @GetMapping("/get")
+    @GetMapping("/all")
     public List<Post> getPosts() {
         return postService.getPosts();
     }

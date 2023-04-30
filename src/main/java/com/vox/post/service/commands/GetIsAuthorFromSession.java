@@ -1,7 +1,6 @@
 package com.vox.post.service.commands;
 
 import com.vox.post.exception.ApiUnauthorizedException;
-import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.CheckIfUserIsAuthorCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

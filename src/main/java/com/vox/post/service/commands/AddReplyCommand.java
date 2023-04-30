@@ -3,7 +3,7 @@ package com.vox.post.service.commands;
 import com.vox.post.exception.ApiRequestException;
 import com.vox.post.model.Comment;
 import com.vox.post.model.Post;
-import com.vox.post.repository.PostRepository;
+import com.vox.post.repository.posts.PostRepository;
 import com.vox.post.service.interfaces.IAddReplyCommand;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

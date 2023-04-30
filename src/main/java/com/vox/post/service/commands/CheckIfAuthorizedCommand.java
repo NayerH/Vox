@@ -1,6 +1,6 @@
 package com.vox.post.service.commands;
 
-import com.vox.post.repository.PostRepository;
+import com.vox.post.repository.posts.PostRepository;
 import com.vox.post.service.interfaces.CheckAuthorCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

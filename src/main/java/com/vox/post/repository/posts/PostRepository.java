@@ -1,4 +1,4 @@
-package com.vox.post.repository;
+package com.vox.post.repository.posts;
 
 import com.vox.post.model.Category;
 import com.vox.post.model.Post;

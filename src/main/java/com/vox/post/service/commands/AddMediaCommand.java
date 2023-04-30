@@ -1,7 +1,7 @@
 package com.vox.post.service.commands;
 
 import com.vox.post.model.Media;
-import com.vox.post.repository.MediaRepository;
+import com.vox.post.repository.media.MediaRepository;
 import com.vox.post.service.interfaces.ReturnManyMediaCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

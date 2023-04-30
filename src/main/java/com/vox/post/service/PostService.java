@@ -2,6 +2,7 @@ package com.vox.post.service;
 
 import com.vox.post.exception.ApiUnauthorizedException;
 import com.vox.post.model.*;
+import com.vox.post.repository.posts.PostRepository;
 import com.vox.post.service.commands.AddCommentCommand;
 import com.vox.post.service.commands.AddMediaCommand;
 import com.vox.post.service.interfaces.*;
