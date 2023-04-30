@@ -3,9 +3,7 @@ package com.vox.post.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mongodb.lang.NonNull;
 import jakarta.persistence.Id;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Document
-@Component
 public class Comment {
     @Id
     private String id;

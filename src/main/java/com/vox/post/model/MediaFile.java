@@ -17,13 +17,10 @@ public class MediaFile {
     private String title;
     @Field
     private String description;
-    @NonNull
     @Field
     private String fileType;
-    @NonNull
     @Field
     private String filePath;
-    @NonNull
     @Field
     private Long fileSize;
 

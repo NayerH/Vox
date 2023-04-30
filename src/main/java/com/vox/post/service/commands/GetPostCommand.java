@@ -5,6 +5,7 @@ import com.vox.post.model.Post;
 import com.vox.post.repository.PostRepository;
 import com.vox.post.service.interfaces.ReturnOneCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -14,21 +15,28 @@ import java.util.Optional;
 
 @Component
 public class GetPostCommand implements ReturnOneCommand {
-    private final PostRepository postRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final PostRepository postRepository;
     private final LocalDateTime MAX_DATE = LocalDateTime.now().minus(1, ChronoUnit.MONTHS);
 
+
     @Autowired
-    public GetPostCommand(PostRepository postRepository, RedisTemplate<String, Object> redisTemplate) {
-        this.postRepository = postRepository;
+    public GetPostCommand(RedisTemplate<String, Object> redisTemplate, PostRepository postRepository) {
         this.redisTemplate = redisTemplate;
+        this.postRepository = postRepository;
+
     }
+
     @Override
     public Post execute(Object o) {
-        Post cachedPost = (Post) redisTemplate.opsForValue().get(o);
+        Post cachedPost = (Post) redisTemplate.opsForValue().get((String) o);
         if(cachedPost != null){
+            System.out.println("Post found in cache");
             return cachedPost;
+        } else {
+            System.out.println("Post not found in cache");
         }
+
         String m = (String) o;
         Optional<Post> optionalPost = postRepository.findById(m);
         if(optionalPost.isPresent()){
