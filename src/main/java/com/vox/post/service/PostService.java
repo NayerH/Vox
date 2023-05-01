@@ -28,7 +28,7 @@ public class PostService {
     private IAddReplyCommand addReplyCommand;
     private ReturnManyMediaCommand addMediaCommand;
     private CheckIfUserIsAuthorCommand getIsAuthorFromSession;
-
+    private ReturnUpdatedMediaCommand updateMediaCommand;
 
     @Autowired
     public PostService(ReturnManyCommand getAllPostsCommand,
@@ -43,7 +43,8 @@ public class PostService {
                        AddCommentCommand addCommentCommand,
                        IAddReplyCommand addReplyCommand,
                        ReturnManyMediaCommand addMediaCommand,
-                       CheckIfUserIsAuthorCommand getIsAuthorFromSession) {
+                       CheckIfUserIsAuthorCommand getIsAuthorFromSession,
+                       ReturnUpdatedMediaCommand updateMediaCommand) {
 
         this.getAllPostsCommand = getAllPostsCommand;
         this.addPostCommand = addPostCommand;
@@ -58,6 +59,7 @@ public class PostService {
         this.addReplyCommand = addReplyCommand;
         this.addMediaCommand = addMediaCommand;
         this.getIsAuthorFromSession = getIsAuthorFromSession;
+        this.updateMediaCommand = updateMediaCommand;
     }
 
     //Functionalities
@@ -75,16 +77,18 @@ public class PostService {
         if(!checkIfAuthorizedCommand.execute(userId, postId)){
             throw new ApiUnauthorizedException("Only author is authorized to update the post");
         }
-        return deletePostCommand.execute(postId);
+        deletePostCommand.execute(postId);
+        return null;
     }
-    public Post addPost(String sessionId, Post post, List<MediaFile> mediaFiles){
+    public Post addPost(String sessionId, Post post, Media media){
         Boolean isAuthor = getIsAuthorFromSession.execute(sessionId);
         if(!isAuthor){
             throw new ApiUnauthorizedException("Only author is authorized to add a new post");
         }
         String userId = getUserIdFromSession.execute(sessionId);
-        Media savedMediaFiles = addMediaCommand.execute(new Media(mediaFiles, userId));
-        String mediaReference = String.valueOf(savedMediaFiles.getId());
+        media.setUploaderId(userId);
+        Media savedMedia = addMediaCommand.execute(media);
+        String mediaReference = String.valueOf(savedMedia.getId());
         post.setMediaFilesRefrence(mediaReference);
         post.setAuthorId(userId);
         return addPostCommand.execute(post);
@@ -97,13 +101,16 @@ public class PostService {
             String content,
             List<String> tags,
             Category.CategoryEnum category,
-            String mediaFilesReference
+            String mediaFilesReference,
+            List<MediaFile> mediaFiles
     ) {
         String userId = getUserIdFromSession.execute(sessionId);
         if(!checkIfAuthorizedCommand.execute(userId, postId)){
             throw new ApiUnauthorizedException("Only author is authorized to update the post");
         }
-        return updatePostCommand.execute(postId, title, content, tags, category, mediaFilesReference);
+        if (mediaFiles != null)
+            updateMediaCommand.execute(mediaFilesReference,mediaFiles);
+        return updatePostCommand.execute(postId, title, content, tags, category);
     }
 
 //    Returns top posts in a category
@@ -122,14 +129,14 @@ public class PostService {
 
     public void addComment(String sessionId, String postId, Comment comment) {
         String userId = getUserIdFromSession.execute(sessionId);
-        if (comment == null || comment.getContent() == null || comment.getContent().length() == 0)
+        if (comment == null || comment.getContent().length() == 0)
             throw new ApiUnauthorizedException("Comment cannot be empty");
         addCommentCommand.execute(userId,postId,comment);
     }
 
     public void addReply(String sessionId, String postId, String commentId, Comment reply) {
         String userId = getUserIdFromSession.execute(sessionId);
-        if (reply == null || reply.getContent() == null || reply.getContent().length() == 0)
+        if (reply == null || reply.getContent().length() == 0)
             throw new ApiUnauthorizedException("Reply cannot be empty");
         addReplyCommand.execute(userId,postId,commentId,reply);
     }

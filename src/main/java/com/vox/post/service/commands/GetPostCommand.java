@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Optional;
 
 @Component
@@ -44,7 +46,7 @@ public class GetPostCommand implements ReturnOneCommand {
             p.setViews(p.getViews() + 1);
             this.postRepository.save(p);
             long MAX_VIEWS = 1000000L;
-            if (p.getViews() >= MAX_VIEWS && p.getPublishedAt().isAfter(MAX_DATE)) {
+            if (p.getViews() >= MAX_VIEWS && p.getPublishedAt().after(Date.from(Instant.now().minus(30, ChronoUnit.DAYS)))) {
                 redisTemplate.opsForValue().set((String) o, p);
             }
             return p;

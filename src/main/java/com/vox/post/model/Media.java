@@ -40,9 +40,8 @@ public class Media {
         this.uploaderId = uploaderId;
     }
 
-    public Media(List<MediaFile> mediaFiles, String uploaderId) {
+    public Media(List<MediaFile> mediaFiles) {
         this.mediaFiles = mediaFiles;
-        this.uploaderId = uploaderId;
     }
 
     @Override
@@ -51,5 +50,9 @@ public class Media {
                 "id=" + id +
                 ", mediaFiles=" + mediaFiles +
                 '}';
+    }
+
+    public void uploaderId(String userId) {
+        this.uploaderId = userId;
     }
 }

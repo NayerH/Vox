@@ -26,7 +26,7 @@ public class MediaFile {
 
     @JsonFormat(pattern = "yyyy-MM-dd@HH:mm")
     @Field
-    private final Date publishedAt = new Date();
+    private Date publishedAt = new Date();
 
     public String getTitle() {
         return title;
@@ -62,6 +62,9 @@ public class MediaFile {
         this.filePath = filePath;
     }
 
+    public void setPublishedAt() {
+        this.publishedAt = new Date();
+    }
     @NonNull
     public Long getFileSize() {
         return fileSize;
