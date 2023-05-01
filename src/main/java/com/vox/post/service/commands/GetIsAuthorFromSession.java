@@ -4,18 +4,19 @@ import com.vox.post.exception.ApiUnauthorizedException;
 import com.vox.post.service.interfaces.CheckIfUserIsAuthorCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class GetIsAuthorFromSession implements CheckIfUserIsAuthorCommand {
-    private final RedisTemplate<String, Object> redisTemplate;
 
+    private CacheManager cacheManager;
     @Autowired
-    public GetIsAuthorFromSession(@Qualifier("redisUserTemplate") RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public GetIsAuthorFromSession(@Qualifier("redisCloudCacheManager") CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
     }
 
     @Override
@@ -24,10 +25,11 @@ public class GetIsAuthorFromSession implements CheckIfUserIsAuthorCommand {
         HashMap<String, Object> m = new HashMap<>();
         m.put("isAuthor", true);
         m.put("userId", "1");
-        redisTemplate.opsForHash().putAll(sessionId, m);
-        Object isAuthor = redisTemplate.opsForHash().get(sessionId, "isAuthor");
-        if(isAuthor == null)
+        cacheManager.getCache("sessions").put(sessionId, m);
+        //END TODO
+        Map<String, Object> sessionData = cacheManager.getCache("sessions").get(sessionId, HashMap.class);
+        if(sessionData == null)
             throw new ApiUnauthorizedException("Invalid session ID");
-        return (Boolean) isAuthor;
+        return (Boolean) sessionData.get("isAuthor");
     }
 }

@@ -4,19 +4,19 @@ import com.vox.post.exception.ApiUnauthorizedException;
 import com.vox.post.service.interfaces.ReturnIdCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class GetUserIdFromSession implements ReturnIdCommand {
 
-    private final RedisTemplate<String, Object> redisTemplate;
-
+    private CacheManager cacheManager;
     @Autowired
-    public GetUserIdFromSession(@Qualifier("redisUserTemplate") RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public GetUserIdFromSession(@Qualifier("redisCloudCacheManager") CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
     }
     @Override
     public String execute(String sessionId) {
@@ -24,10 +24,11 @@ public class GetUserIdFromSession implements ReturnIdCommand {
         HashMap<String, Object> m = new HashMap<>();
         m.put("isAuthor", true);
         m.put("userId", "1");
-        redisTemplate.opsForHash().putAll(sessionId, m);
-        Object userId = redisTemplate.opsForHash().get(sessionId, "userId");
-        if(userId == null)
+        cacheManager.getCache("sessions").put(sessionId, m);
+        //END TODO
+        Map<String, Object> sessionData = cacheManager.getCache("sessions").get(sessionId, HashMap.class);
+        if(sessionData == null)
             throw new ApiUnauthorizedException("Invalid session ID");
-        return (String) userId;
+        return sessionData.get("userId").toString();
     }
 }
