@@ -28,19 +28,20 @@ public class RedisConfig implements CachingConfigurer {
 
     @Value(value = "${redis.timeout}")
     private String redisTimeout;
-    @Value(value = "${spring.redis.useCloud}")
-    private Boolean useCloud;
 
-    @Value(value = "${spring.redis.password}")
+    @Value(value = "${spring.redis.cloud.password}")
     private String password;
+
+    @Value(value = "${spring.redis.cloud.host}")
+    private String redisHostCloud;
+
+    @Value(value = "${spring.redis.cloud.port}")
+    private String redisPortCloud;
 
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, Integer.parseInt(redisPort));
-        if(useCloud){
-            redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-        }
         JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
         jedisClientConfiguration.connectTimeout(Duration.ofSeconds(Integer.parseInt(redisTimeout)));
 
@@ -48,13 +49,30 @@ public class RedisConfig implements CachingConfigurer {
     }
 
     @Bean
+    JedisConnectionFactory jedisCloudConnectionFactory() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHostCloud, Integer.parseInt(redisPortCloud));
+        redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+        JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
+        jedisClientConfiguration.connectTimeout(Duration.ofSeconds(Integer.parseInt(redisTimeout)));
+
+        return new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration.build());
+    }
+
+    @Bean(name = "redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(){
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         return template;
     }
 
-    @Bean(name = "redisTemplate")
+    @Bean(name = "redisUserTemplate")
+    public RedisTemplate<String, Object> redisTemplateCloud(){
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisCloudConnectionFactory());
+        return template;
+    }
+
+    @Bean(name = "redisScheduleTemplate")
     public RedisTemplate<String, Object> redisScheduleTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
