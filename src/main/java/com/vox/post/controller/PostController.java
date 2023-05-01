@@ -1,6 +1,7 @@
 package com.vox.post.controller;
 
 import com.vox.post.controller.request.RequestWrapper;
+import com.vox.post.controller.request.UpdateWrapper;
 import com.vox.post.model.*;
 import com.vox.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
@@ -45,15 +46,16 @@ public class PostController {
     @CachePut(value = "posts", key = "#result.id") //Cache newly added posts
     public Post addPost(HttpSession session, @Validated @RequestBody RequestWrapper body) {
         Post post = body.getPost();
-        List<MediaFile> mediaFiles = body.getMediaFiles();
-        return postService.addPost(session.getId(), post, mediaFiles);
+        Media media = body.getMedia();
+        return postService.addPost(session.getId(), post, media);
     }
 
 
     @DeleteMapping("/delete/{id}")
     @CacheEvict(value = "posts", key = "#id") //Evict cached posts by id
-    public void deletePost(HttpSession session, @PathVariable String id) {
+    public Post deletePost(HttpSession session, @PathVariable String id) {
         postService.deletePost(session.getId(), id);
+        return null;
     }
 
 //    Returns top 3 posts in a category and caches the result after each request
@@ -76,15 +78,14 @@ public class PostController {
 //      Similar to the custom handler in the addPost method
     @PutMapping("/update/{id}")
     @CachePut(value = "posts", key = "#{id}") //Cache recently updated posts
-    public Post updatePost(
-            HttpSession session,
-            @PathVariable String id,
-            @RequestBody(required = false) String title,
-            @RequestBody(required = false) String content,
-            @RequestBody(required = false) List<String> tags,
-            @RequestBody(required = false) Category.CategoryEnum category,
-            @RequestBody(required = false) String mediaFilesReference
-    ) {
+    public Post updatePost(HttpSession session, @PathVariable String id, @RequestBody UpdateWrapper body) {
+        String title = body.getTitle();
+        String content = body.getContent();
+        List<String> tags = body.getTags();
+        Category.CategoryEnum category = body.getCategory();
+        String mediaFilesReference = body.getMediaFilesReference();
+        List<MediaFile> mediaFiles = body.getMediaFiles();
+
         return postService.updatePost(
                 session.getId(),
                 id,
@@ -92,7 +93,8 @@ public class PostController {
                 content,
                 tags,
                 category,
-                mediaFilesReference
+                mediaFilesReference,
+                mediaFiles
         );
     }
 

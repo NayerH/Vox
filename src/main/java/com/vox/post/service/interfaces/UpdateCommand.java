@@ -10,6 +10,5 @@ public interface UpdateCommand {
                  String title,
                  String content,
                  List<String> tags,
-                 Category.CategoryEnum category,
-                 String mediaFilesReference);
+                 Category.CategoryEnum category);
 }

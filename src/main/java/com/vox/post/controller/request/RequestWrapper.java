@@ -8,7 +8,7 @@ import java.util.List;
 
 public class RequestWrapper {
     private Post post;
-    private List<MediaFile> mediaFiles;
+    private Media media;
 
     // getters and setters
     public Post getPost() {
@@ -19,11 +19,11 @@ public class RequestWrapper {
         this.post = post;
     }
 
-    public List<MediaFile> getMediaFiles() {
-        return mediaFiles;
+    public Media getMedia() {
+        return media;
     }
 
-    public void setMediaFiles(List<MediaFile> mediaFiles) {
-        this.mediaFiles = mediaFiles;
+    public void setMediaFiles(Media media) {
+        this.media = media;
     }
 }

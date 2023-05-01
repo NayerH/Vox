@@ -23,8 +23,7 @@ public class UpdatePostCommand implements UpdateCommand {
                         String title,
                         String content,
                         List<String> tags,
-                        Category.CategoryEnum category,
-                        String mediaFilesReference)
+                        Category.CategoryEnum category)
     {
         Post post = this.postRepository.findById(postId).orElseThrow(
                 () -> new ApiRequestException("Post with id " + postId + " does not exist")
@@ -37,9 +36,6 @@ public class UpdatePostCommand implements UpdateCommand {
         }
         if(tags != null){
             post.setTags(tags);
-        }
-        if(mediaFilesReference != null){
-            post.setMediaFilesRefrence(mediaFilesReference);
         }
         if(category != null){
             post.setCategory(category);
