@@ -1,5 +1,7 @@
 package com.vox.post.service.interfaces;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
@@ -7,9 +9,9 @@ import org.springframework.stereotype.Service;
 //consumeMessage IS THE METHOD THAT WILL BE CALLED WHEN A MESSAGE IS RECEIVED (COMMAND ITSELF)
 @Service
 public class RabbitMQConsumer {
-
+    private static final Logger logger = LoggerFactory.getLogger(RabbitMQConsumer.class);
     @RabbitListener(queues = "${rabbitmq.queue1.name}")
     public void consumeMessage(String message){
-        System.out.println("Message received: " + message);
+        logger.info("Message received: " + message);
     }
 }
