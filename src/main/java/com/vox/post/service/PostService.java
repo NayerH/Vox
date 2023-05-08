@@ -7,6 +7,7 @@ import com.vox.post.service.commands.AddCommentCommand;
 import com.vox.post.service.commands.AddMediaCommand;
 import com.vox.post.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
