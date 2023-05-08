@@ -73,29 +73,30 @@ public class PostService {
         return getPostCommand.execute(id);
     }
 
-    public Post deletePost(String sessionId, String postId){
+    public void deletePost(String sessionId, String postId){
         String userId = getUserIdFromSession.execute(sessionId);
         if(!checkIfAuthorizedCommand.execute(userId, postId)){
             throw new ApiUnauthorizedException("Only author is authorized to update the post");
         }
         deletePostCommand.execute(postId);
-        return null;
     }
-    public Post addPost(String sessionId, Post post, Media media){
+    public void addPost(String sessionId, Post post, Media media){
         Boolean isAuthor = getIsAuthorFromSession.execute(sessionId);
         if(!isAuthor){
             throw new ApiUnauthorizedException("Only author is authorized to add a new post");
         }
         String userId = getUserIdFromSession.execute(sessionId);
-        media.setUploaderId(userId);
-        Media savedMedia = addMediaCommand.execute(media);
-        String mediaReference = String.valueOf(savedMedia.getId());
-        post.setMediaFilesRefrence(mediaReference);
+        if(media != null) {
+            media.setUploaderId(userId);
+            Media savedMedia = addMediaCommand.execute(media);
+            String mediaReference = String.valueOf(savedMedia.getId());
+            post.setMediaFilesRefrence(mediaReference);
+        }
         post.setAuthorId(userId);
-        return addPostCommand.execute(post);
+        addPostCommand.execute(post);
     }
 
-    public Post updatePost(
+    public void updatePost(
             String sessionId,
             String postId,
             String title,
@@ -111,7 +112,7 @@ public class PostService {
         }
         if (mediaFiles != null)
             updateMediaCommand.execute(mediaFilesReference,mediaFiles);
-        return updatePostCommand.execute(postId, title, content, tags, category);
+        updatePostCommand.execute(postId, title, content, tags, category);
     }
 
 //    Returns top posts in a category

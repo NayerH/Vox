@@ -45,7 +45,7 @@ public class PostController {
     }
 
     @PostMapping("/add")
-    @CachePut(value = "posts", key = "#result.id") //Cache newly added posts
+//    @CachePut(value = "posts", key = "#result.id") //Cache newly added posts
     @Async
     public void addPost(HttpSession session, @Validated @RequestBody RequestWrapper body) {
         Post post = body.getPost();
