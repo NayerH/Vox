@@ -2,7 +2,6 @@ package com.vox.post.controller.request;
 
 import com.vox.post.model.Category;
 import com.vox.post.model.MediaFile;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
