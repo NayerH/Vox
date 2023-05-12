@@ -76,21 +76,57 @@ The following properties can be used to configure the mini-service:
 
 The following dependencies are required to build and run the mini-service:
 
-```
-Spring Boot Starter AMQP
-Spring Boot Starter Data JPA
-Spring Boot Starter Data MongoDB
-Spring Boot Starter Data Redis Reactive
-Spring Boot Starter Web
-Spring Boot Starter Test
-Reactor Test
-Spring Rabbit Test
-Spring Boot Starter Data Redis
-Jedis
-ModelMapper
-Mongo Java Driver
-Lombok
-```
+* **Spring Boot Starter AMQP**
+
+This dependency provides support for using the Spring AMQP framework, which is a lightweight, high-performance messaging framework that provides a consistent programming model for sending and receiving messages between applications.
+
+* **Spring Boot Starter Data JPA**
+
+This dependency provides support for using the Spring Data JPA framework, which is an extension of the Spring Data family that provides support for using the Java Persistence API (JPA) to access relational databases.
+
+* **Spring Boot Starter Data MongoDB**
+
+This dependency provides support for using the Spring Data MongoDB framework, which is an extension of the Spring Data family that provides support for using MongoDB as a data store.
+
+* **Spring Boot Starter Data Redis Reactive**
+
+This dependency provides support for using the Spring Data Redis Reactive framework, which is an extension of the Spring Data family that provides support for using Redis as a data store in a reactive manner.
+
+* **Spring Boot Starter Web**
+
+This dependency provides support for building web applications using Spring MVC.
+
+* **Spring Boot Starter Test**
+
+This dependency provides support for testing Spring Boot applications.
+
+* **Reactor Test**
+
+This dependency provides support for testing reactive applications.
+
+* **Spring Rabbit Test**
+
+This dependency provides support for testing Spring AMQP applications.
+
+* **Spring Boot Starter Data Redis**
+
+This dependency provides support for using the Spring Data Redis framework, which is an extension of the Spring Data family that provides support for using Redis as a data store.
+
+* **Jedis**
+
+This dependency provides a Java client library for Redis.
+
+* **ModelMapper**
+
+This dependency provides a Java object mapping library that can be used to map between different object graphs.
+
+* **Mongo Java Driver**
+
+This dependency provides a Java driver for MongoDB.
+
+* **Lombok**
+
+This dependency provides a Java annotation processor that can be used to generate boilerplate code, such as getters, setters, and toString methods.
 
 ### Contribution
 
