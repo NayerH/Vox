@@ -6,9 +6,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class setMaxDbConnectionsCountCommand {
-    private static final Logger logger = LoggerFactory.getLogger(setMaxDbConnectionsCountCommand.class);
-    @RabbitListener(queues = "${rabbitmq.queue3.name}")
+public class SetMaxThreadCountCommand {
+    private static final Logger logger = LoggerFactory.getLogger(SetMaxThreadCountCommand.class);
+    @RabbitListener(queues = "${rabbitmq.queue2.name}")
     public void consumeMessage(String message){
         logger.info("Message received: " + message);
     }

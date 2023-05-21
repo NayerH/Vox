@@ -6,9 +6,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class setErrorReportingLevelCommand {
-    private static final Logger logger = LoggerFactory.getLogger(setErrorReportingLevelCommand.class);
-    @RabbitListener(queues = "${rabbitmq.queue10.name}")
+public class SetMaxDbConnectionsCountCommand {
+    private static final Logger logger = LoggerFactory.getLogger(SetMaxDbConnectionsCountCommand.class);
+    @RabbitListener(queues = "${rabbitmq.queue3.name}")
     public void consumeMessage(String message){
         logger.info("Message received: " + message);
     }

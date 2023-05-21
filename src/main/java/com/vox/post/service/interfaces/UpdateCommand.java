@@ -5,7 +5,7 @@ import com.vox.post.model.Post;
 
 import java.util.List;
 
-public interface UpdateCommand {
+public interface UpdateCommand extends Command {
     Post execute(String postId,
                  String title,
                  String content,
