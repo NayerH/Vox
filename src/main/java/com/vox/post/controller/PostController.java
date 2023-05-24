@@ -6,6 +6,7 @@ import com.vox.post.model.*;
 import com.vox.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.scheduling.annotation.Async;
@@ -17,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping(path = "api/v1/posts")
+@ConditionalOnProperty(prefix = "disable", name = "post.controller", havingValue = "false", matchIfMissing = true)
 public class PostController {
 
     private PostService postService;
