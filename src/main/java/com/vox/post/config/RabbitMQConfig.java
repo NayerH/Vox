@@ -31,9 +31,12 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue10.name}")
     private String queue10;
 
-
+    @Value("${rabbitmq.searchQueue.name}")
+    private String searchPostsQueue;
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
+    @Value("${rabbitmq.searchExchange.name}")
+    private String searchExchange;
 
     @Value("${rabbitmq.routing1.key}")
     private String key1;
@@ -55,7 +58,8 @@ public class RabbitMQConfig {
     private String key9;
     @Value("${rabbitmq.routing10.key}")
     private String key10;
-
+    @Value("${rabbitmq.searchQueueRouting.key}")
+    private String searchPostsQueueRoutingKey;
 
     @Bean
     public Queue queue1(){
@@ -98,7 +102,16 @@ public class RabbitMQConfig {
         return new Queue(queue10);
     }
     @Bean
+    public Queue searchPostsQueue(){
+        return new Queue(searchPostsQueue);
+    }
+    @Bean
     public TopicExchange exchange(){
+        return new TopicExchange(exchange);
+    }
+
+    @Bean
+    public TopicExchange searchExchange(){
         return new TopicExchange(exchange);
     }
     @Bean
@@ -142,6 +155,10 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(queue10()).to(exchange()).with(key10);
     }
 
+    @Bean
+    public Binding bindingSearchPosts(){
+        return BindingBuilder.bind(searchPostsQueue()).to(searchExchange()).with(searchPostsQueueRoutingKey);
+    }
     @Bean
     public MessageConverter jsonMessageConverter(){
         return new Jackson2JsonMessageConverter();
