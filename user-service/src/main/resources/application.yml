@@ -1,0 +1,43 @@
+#spring.datasource.url=jdbc:postgresql://localhost:5432/userdatabase
+#spring.datasource.username=
+#spring.datasource.password=
+##spring.security.username=postgres
+##spring.security.user.password=Manooty123
+#spring.datasource.driver-class-name=org.postgresql.Driver
+#spring.jpa.hibernate.ddl-auto=create-drop
+#spring.jpa.show-sql=true
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#spring.jpa.properties.hibernate.format_sql=true
+#server.error.include-message=always
+
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/security_database
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
+
+
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    cloud:
+      password: R12DbVhT9Biq2G89zn3Yk50VVQEYqB0Z
+      host: redis-11132.c250.eu-central-1-1.ec2.cloud.redislabs.com
+      port: 11132
+
+redis:
+  timeout: 8400 # Replace with your desired timeout value in milliseconds
