@@ -1,5 +1,7 @@
 # Vox
 
+This is a scalable web application for a news media outlet built using Java Springboot, using the microservices architecture.
+
 ### VOX/Posts
 
 This mini-service is part of a larger app that allows users to view, comment on, and create posts. It is designed to be a user-friendly, secure, and scalable platform for creating and sharing content.
